@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  node:
+    image: node:20
+    container_name: node_dev
+    hostname: toeslagen
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./.bash_history:/.bash_history
+    command: "node --inspect=0.0.0.0:9229"
+    ports:
+      - "9229:9229"
+      - "3000:3000" # Voor lokale servers zoals Express.js
+      - "8080:8080" # Extra poort indien nodig
+    user: ${HOST_UID}:${HOST_GID}
+
+volumes:
+  node_modules:
