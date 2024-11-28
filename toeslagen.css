@@ -1,0 +1,54 @@
+.progress-bar {
+    display: none;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 100px;
+}
+
+.line {
+    flex-grow: 1;
+    height: 6px;
+    background: #50164a;
+    position: relative;
+    z-index: 1;
+}
+
+.circle-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transform: translateX(120%);
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #50164a;
+    position: relative;
+}
+
+.month-name {
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+    position: absolute;
+    transform: translateY(130%);
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.amount {
+    flex-basis: 20%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    margin-left: 10px;
+}
