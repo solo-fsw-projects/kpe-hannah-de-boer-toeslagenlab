@@ -12,6 +12,8 @@
     let currentMonth = null;
 
     runAfterNextButton = function (enablePreviousButton, startSaldo, monthName) {
+        console.log('runAfterNextButton runs');
+
         if (months.length === 0) {
             initMonths();
             return;
@@ -22,26 +24,31 @@
         if (startSaldo > 0) {
             if (currentSaldo === 0) {
                 simulation = new Simulation(startSaldo);
+                console.log('Simulation is started with start saldo ' + startSaldo);
             }
             currentMonth = months.find(month => month.name === monthName);
             showProgressBar();
             updateProgressBar(currentMonth);
             updateAmount(previousSaldo,  currentSaldo);
+            console.log('Progress bar is updated');
         }
     }
 
     function doPreviousButton(enable) {
         if (enable) {
             document.querySelector('#PreviousButton').style.display = 'block';
+            console.log('Previous button is enabled');
         }
         else {
             document.querySelector('#PreviousButton').style.display = 'node';
+            console.log('Previous button is disabled');
         }
     }
 
     function showProgressBar() {
         const progressBar = document.querySelector(".progress-bar");
         progressBar.style.display = 'flex';
+        console.log('Progress bar is showing');
     }
 
     function storeEmbeddedData(key, value) {
@@ -275,6 +282,7 @@
         if (months.length === 0) {
             console.error('No months found in csv data');
         }
+        console.log('months have been loaded');
     }
 
     async function fetchURLContent(url) {
@@ -292,12 +300,15 @@
 
     applyIncomes = function () {
         simulation.applyIncomes(currentMonth.getIncomes());
+        console.log('Incomes have been applied');
     }
     applyFixedExpenses = function () {
         simulation.applyFixedExpenses(currentMonth.getFixedExpenses());
+        console.log('Fixed expenses have been applied');
     }
     applyVariableExpense = function () {
         simulation.applyVariableExpense(currentMonth.getNextVariableExpense());
+        console.log('Variable expense has been applied');
     }
 
     window.toeslagen = {
