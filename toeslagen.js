@@ -14,7 +14,7 @@
     runAfterNextButton = function (enablePreviousButton, startSaldo, monthName) {
         console.log('runAfterNextButton runs');
 
-        if (months.length === 0) {
+        if (!months) {
             initMonths();
             return;
         }
@@ -275,9 +275,9 @@
         step();
     }
 
-    function initMonths() {
+    async function initMonths() {
         const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS92k3uxW_oUM0QMdz55LwCihJL8I9LeAsN_N7CiUdILqSoxp33-wenoJdHzQjFd0KXoA8HWvcwC71S/pub?gid=1011705160&single=true&output=csv'; // Replace with your URL
-        let csvData = fetchCSV(fetchURLContent(url));
+        let csvData = fetchCSV(await fetchURLContent(url));
         months = convertCSVToObjects(csvData);
         if (months.length === 0) {
             console.error('No months found in csv data');
