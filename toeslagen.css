@@ -1,3 +1,7 @@
+.Skin #Buttons #PreviousButton {
+    display: none;
+}
+
 .progress-bar {
     display: none;
     align-items: center;
