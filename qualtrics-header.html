@@ -1,0 +1,27 @@
+<div class="progress-bar">
+    <div class="line"></div>
+    <div class="circle-container">
+        <div class="circle"></div>
+        <div class="month-name"></div>
+    </div>
+    <div class="amount"></div>
+</div>
+
+<script>
+
+    if (!window.toeslagen) {
+        const script = document.createElement('script');
+        script.src = 'https://www.chrisdejager.nl/toeslagen/toeslagen.js';
+        script.defer = true;
+        script.onload = () => { init(); };
+        document.body.appendChild(script);
+    } else {
+        console.log('Script is already loaded.');
+        init();
+    }
+
+    function init() {
+        window.toeslagen.runAfterNextButton(parseInt('${e://Field/enable_previous_button}'), parseInt('${e://Field/start_saldo}'), '${e://Field/month}');
+    }
+
+</script>
