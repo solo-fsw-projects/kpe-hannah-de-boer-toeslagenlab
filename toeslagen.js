@@ -40,11 +40,11 @@
             return;
         }
 
-        if (enable) {
+        if (enable && previousButton.style.display === 'node') {
             previousButton.style.display = 'block';
             console.log('Previous button is enabled');
         }
-        else {
+        else if (!enable && previousButton.style.display === 'flex') {
             previousButton.style.display = 'node';
             console.log('Previous button is disabled');
         }
@@ -52,8 +52,10 @@
 
     function showProgressBar() {
         const progressBar = document.querySelector(".progress-bar");
-        progressBar.style.display = 'flex';
-        console.log('Progress bar is showing');
+        if (progressBar.style.display === 'none') {
+            progressBar.style.display = 'flex';
+            console.log('Progress bar is showing');
+        }
     }
 
     function storeEmbeddedData(key, value) {
@@ -258,6 +260,7 @@
     }
 
     function updateAmount(currentAmount, newAmount) {
+        const progressBar = document.querySelector(".progress-bar");
         const amountElement = progressBar.querySelector(".amount");
         amountElement.textContent = `${newAmount}`;
 
