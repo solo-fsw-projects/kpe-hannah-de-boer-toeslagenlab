@@ -35,12 +35,17 @@
     }
 
     function doPreviousButton(enable) {
+        let previousButton = document.querySelector('#PreviousButton');
+        if (!previousButton) {
+            return;
+        }
+
         if (enable) {
-            document.querySelector('#PreviousButton').style.display = 'block';
+            previousButton.style.display = 'block';
             console.log('Previous button is enabled');
         }
         else {
-            document.querySelector('#PreviousButton').style.display = 'node';
+            previousButton.style.display = 'node';
             console.log('Previous button is disabled');
         }
     }
