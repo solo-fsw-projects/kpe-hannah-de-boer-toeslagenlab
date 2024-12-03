@@ -21,20 +21,26 @@
 
         doPreviousButton(enablePreviousButton);
 
-        if (startSaldo > 0) {
-            if (currentSaldo === 0) {
-                previousSaldo = currentSaldo = startSaldo;
-                simulation = new SaldoSimulation(startSaldo);
-                console.log('Simulation is started with saldo ' + startSaldo);
-            }
-            currentSaldo = simulation.getSaldo();
-            currentMonth = months.find(month => month.name === currentMonthName);
-            updateProgressBar(currentMonth);
-            showProgressBar();
-            updateAmount(previousSaldo,  currentSaldo);
-            previousSaldo = currentSaldo;
-            console.log('Progress bar is updated');
+        if (startSaldo === 0) {
+            return;
         }
+
+        if (currentSaldo === 0) {
+            previousSaldo = currentSaldo = startSaldo;
+            simulation = new SaldoSimulation(startSaldo);
+            console.log('Simulation is started with saldo ' + startSaldo);
+        }
+        currentSaldo = simulation.getSaldo();
+        currentMonth = months.find(month => month.name === currentMonthName);
+
+        replaceQuestTextVariables(currentMonth);
+
+        updateProgressBar(currentMonth);
+        showProgressBar();
+        updateAmount(previousSaldo,  currentSaldo);
+
+        previousSaldo = currentSaldo;
+        console.log('Progress bar is updated');
     }
 
     function doPreviousButton(enable) {
@@ -59,6 +65,67 @@
             progressBar.style.display = 'flex';
             console.log('Progress bar is showing');
         }
+    }
+
+    function replaceQuestTextVariables(currentMonth) {
+        const questionText = document.querySelector('.QuestionText');
+        const variables = [
+            'income',
+            'fixed_expenses',
+            'variable_expense_name',
+            'variable_expense_description',
+            'variable_expense_amount'
+        ];
+
+        if (!questionText) {
+            return;
+        }
+        let content = questionText.innerHTML;
+
+        variables.forEach(variable => {
+            const placeholder = `{{${variable}}}`;
+            let variableExpense = currentMonth.getNextVariableExpense(false);
+            switch (variable) {
+                case 'income':
+                    content = replaceByList(content, placeholder, currentMonth.getIncomes());
+                    break;
+                case 'fixed_expenses':
+                    content = replaceByList(content, placeholder, currentMonth.getFixedExpenses());
+                    break;
+                case 'variable_expense_name':
+                    if (variableExpense === null) {
+                        replacement = '{{ERROR}}';
+                    } else {
+                        replacement = variableExpense.getName();
+                    }
+                    content = content.replace(placeholder, replacement);
+                    break;
+                case 'variable_expense_description':
+                    if (variableExpense === null) {
+                        replacement = '{{ERROR}}';
+                    } else {
+                        replacement = variableExpense.getDescription();
+                    }
+                    content = content.replace(placeholder, replacement);
+                    break;
+                case 'variable_expense_amount':
+                    if (variableExpense === null) {
+                        replacement = '{{ERROR}}';
+                    } else {
+                        replacement = variableExpense.getAmount();
+                    }
+                    content = content.replace(placeholder, replacement);
+                    break;
+            }
+        });
+
+        questionText.innerHTML = content;
+    }
+
+    function replaceByList(content, placeholder, list) {
+        const listHtml = `<ul>${list.map(item => `<li>${item.name} &euro; ${item.getAmount()}</li>`).join('')}</ul>`;
+
+        return content.replace(placeholder, listHtml);
     }
 
     function storeEmbeddedData(key, value) {

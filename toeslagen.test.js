@@ -32,7 +32,7 @@ nextButton.addEventListener("click", () =>
             monthState++;
             break;
         case 3:
-            let variableExpense = window.toeslagen.getNextVariableExpense();
+            let variableExpense = window.toeslagen.getNextVariableExpense(false);
             if (variableExpense === null) {
                 currentMonthIndex++;
                 monthState = 1;
