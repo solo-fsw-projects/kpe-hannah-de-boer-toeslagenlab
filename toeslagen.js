@@ -21,7 +21,7 @@
 
         doPreviousButton(enablePreviousButton);
 
-        if (startSaldo === 0) {
+        if (!startSaldo || startSaldo === 0) {
             return;
         }
 
