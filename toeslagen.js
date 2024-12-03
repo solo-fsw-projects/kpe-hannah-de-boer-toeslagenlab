@@ -23,13 +23,16 @@
 
         if (startSaldo > 0) {
             if (currentSaldo === 0) {
-                simulation = new Simulation(startSaldo);
-                console.log('Simulation is started with start saldo ' + startSaldo);
+                previousSaldo = currentSaldo = startSaldo;
+                simulation = new SaldoSimulation(startSaldo);
+                console.log('Simulation is started with saldo ' + startSaldo);
             }
+            currentSaldo = simulation.getSaldo();
             currentMonth = months.find(month => month.name === monthName);
-            showProgressBar();
             updateProgressBar(currentMonth);
+            showProgressBar();
             updateAmount(previousSaldo,  currentSaldo);
+            previousSaldo = currentSaldo;
             console.log('Progress bar is updated');
         }
     }
@@ -40,19 +43,19 @@
             return;
         }
 
-        if (enable && previousButton.style.display === 'node') {
+        if (enable && previousButton.style.display === '') {
             previousButton.style.display = 'block';
             console.log('Previous button is enabled');
         }
         else if (!enable && previousButton.style.display === 'flex') {
-            previousButton.style.display = 'node';
+            previousButton.style.display = '';
             console.log('Previous button is disabled');
         }
     }
 
     function showProgressBar() {
         const progressBar = document.querySelector(".progress-bar");
-        if (progressBar.style.display === 'none') {
+        if (progressBar.style.display === '') {
             progressBar.style.display = 'flex';
             console.log('Progress bar is showing');
         }
@@ -96,12 +99,14 @@
             return this.variableExpenses;
         }
 
-        getNextVariableExpense() {
+        getNextVariableExpense(remove = true) {
             if (this.currentVariableExpense >= this.variableExpenses.length) {
                 return null;
             }
             let currentVariableExpense = this.variableExpenses[this.currentVariableExpense];
-            this.currentVariableExpense++;
+            if (remove) {
+                this.currentVariableExpense++;
+            }
 
             return currentVariableExpense;
         }
@@ -142,10 +147,9 @@
         }
     }
 
-    class Simulation {
+    class SaldoSimulation {
         constructor(startSaldo) {
             this.saldo = startSaldo;
-            this.previousSaldo = startSaldo;
         }
 
         applyIncomes(incomes) {
@@ -166,18 +170,6 @@
 
         getSaldo() {
             return this.saldo;
-        }
-
-        getPreviousSaldo() {
-            return this.previousSaldo;
-        }
-
-        hasChangedSaldo() {
-            return this.saldo !== this.previousSaldo;
-        }
-
-        savePreviousSaldo() {
-            this.previousSaldo = this.saldo;
         }
     }
 
@@ -315,15 +307,20 @@
         console.log('Fixed expenses have been applied');
     }
     applyVariableExpense = function () {
-        simulation.applyVariableExpense(currentMonth.getNextVariableExpense());
+        simulation.applyVariableExpense(currentMonth.getNextVariableExpense(true));
         console.log('Variable expense has been applied');
+    }
+
+    getMonths = function () {
+        return months;
     }
 
     window.toeslagen = {
         runAfterNextButton,
         applyIncomes,
         applyFixedExpenses,
-        applyVariableExpense
+        applyVariableExpense,
+        getMonths,
     };
 
 })();
