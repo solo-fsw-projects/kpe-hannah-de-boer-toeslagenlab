@@ -11,8 +11,8 @@
     let months = null;
     let currentMonth = null;
 
-    runAfterNextButton = function (enablePreviousButton, startSaldo, monthName) {
-        console.log('runAfterNextButton runs');
+    runOnNewSlide = function (enablePreviousButton, startSaldo, currentMonthName) {
+        console.log('runOnNewSlide runs');
 
         if (!months) {
             initMonths();
@@ -28,7 +28,7 @@
                 console.log('Simulation is started with saldo ' + startSaldo);
             }
             currentSaldo = simulation.getSaldo();
-            currentMonth = months.find(month => month.name === monthName);
+            currentMonth = months.find(month => month.name === currentMonthName);
             updateProgressBar(currentMonth);
             showProgressBar();
             updateAmount(previousSaldo,  currentSaldo);
@@ -315,12 +315,25 @@
         return months;
     }
 
+    getIncomes = function () {
+        return currentMonth.getIncomes();
+    }
+    getFixedExpenses = function () {
+        return currentMonth.getIncomes();
+    }
+    getNextVariableExpense = function () {
+        return currentMonth.getNextVariableExpense(false);
+    }
+
     window.toeslagen = {
-        runAfterNextButton,
+        runOnNewSlide,
         applyIncomes,
         applyFixedExpenses,
         applyVariableExpense,
         getMonths,
+        getIncomes,
+        getFixedExpenses,
+        getNextVariableExpense
     };
 
 })();

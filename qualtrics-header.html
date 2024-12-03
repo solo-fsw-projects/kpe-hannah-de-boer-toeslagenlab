@@ -29,7 +29,7 @@
     function init() {
         Qualtrics.SurveyEngine.addOnReady(function()
         {
-            window.toeslagen.runAfterNextButton(parseInt('${e://Field/enable_previous_button}'), parseInt('${e://Field/start_saldo}'), '${e://Field/month}');
+            window.toeslagen.runOnNewSlide(parseInt('${e://Field/enable_previous_button}'), parseInt('${e://Field/start_saldo}'), '${e://Field/month}');
         });
     }
 

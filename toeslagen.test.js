@@ -9,7 +9,7 @@ nextButton.addEventListener("click", () =>
 {
     months = window.toeslagen.getMonths();
     if (months === null) {
-        window.toeslagen.runAfterNextButton();
+        window.toeslagen.runOnNewSlide();
         console.log("first time load months");
         return;
     }
@@ -18,21 +18,21 @@ nextButton.addEventListener("click", () =>
         console.log('Simulation is done.');
         return;
     }
-    window.toeslagen.runAfterNextButton(0, 526, month.name);
+    window.toeslagen.runOnNewSlide(0, 526, month.name);
 
     switch (monthState) {
         case 1:
-            window.toeslagen.applyIncomes(month.getIncomes());
-            description.innerHTML = "Je ontvangt inkomen van:<br><br>" + month.getIncomes().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
+            window.toeslagen.applyIncomes();
+            description.innerHTML = "Je ontvangt inkomen van:<br><br>" + window.toeslagen.getIncomes().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
             monthState++;
             break;
         case 2:
-            window.toeslagen.applyFixedExpenses(month.getFixedExpenses());
-            description.innerHTML = "Je vaste lasten moet je betalen:<br><br>" + month.getFixedExpenses().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
+            window.toeslagen.applyFixedExpenses();
+            description.innerHTML = "Je vaste lasten moet je betalen:<br><br>" + window.toeslagen.getFixedExpenses().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
             monthState++;
             break;
         case 3:
-            let variableExpense = month.getNextVariableExpense(false);
+            let variableExpense = window.toeslagen.getNextVariableExpense();
             if (variableExpense === null) {
                 currentMonthIndex++;
                 monthState = 1;
