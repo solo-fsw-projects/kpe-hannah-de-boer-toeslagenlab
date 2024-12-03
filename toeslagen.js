@@ -32,6 +32,10 @@
         }
         currentSaldo = simulation.getSaldo();
         currentMonth = months.find(month => month.name === currentMonthName);
+        if (!currentMonth) {
+            console.error(`Cannot find ${currentMonthName} in months data`);
+            return;
+        }
 
         replaceQuestTextVariables(currentMonth);
 
