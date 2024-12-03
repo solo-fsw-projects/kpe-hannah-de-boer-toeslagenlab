@@ -247,7 +247,7 @@
         const percentage = (months.indexOf(month) / (months.length - 1)) * 50;
         const monthNameElement = progressBar.querySelector(".month-name");
 
-        circleContainer.style.left = `calc(${percentage}% - 50px)`;
+        circleContainer.style.left = `calc(${percentage}% - 18px)`;
         monthNameElement.textContent = month.name;
     }
 
