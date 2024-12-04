@@ -3,17 +3,13 @@
 
     console.log('toeslagen.js is loaded.');
 
-    let startSaldo = 0;
     let currentSaldo = 0;
     let previousSaldo = 0;
-    let monthState = 1;
     let simulation = null;
     let months = null;
     let currentMonth = null;
 
     runOnNewSlide = function (enablePreviousButton, startSaldo, currentMonthName) {
-        console.log('runOnNewSlide runs');
-
         if (!months) {
             initMonths();
             return;
@@ -37,10 +33,9 @@
             return;
         }
 
-        replaceQuestTextVariables(currentMonth);
+        replaceQuestionTextVariables(currentMonth);
 
         updateProgressBar(currentMonth);
-        showProgressBar();
         updateAmount(previousSaldo,  currentSaldo);
 
         previousSaldo = currentSaldo;
@@ -63,15 +58,7 @@
         }
     }
 
-    function showProgressBar() {
-        const progressBar = document.querySelector(".progress-bar");
-        if (progressBar.style.display === '') {
-            progressBar.style.display = 'flex';
-            console.log('Progress bar is showing');
-        }
-    }
-
-    function replaceQuestTextVariables(currentMonth) {
+    function replaceQuestionTextVariables(currentMonth) {
         const questionText = document.querySelector('.QuestionText');
         const variables = [
             'income',
