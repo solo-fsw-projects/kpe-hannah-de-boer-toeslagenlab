@@ -3,6 +3,7 @@
 
     console.log('toeslagen.js is loaded.');
 
+    let originalSaldo = 0;
     let currentSaldo = 0;
     let previousSaldo = 0;
     let simulation = null;
@@ -21,8 +22,8 @@
             return;
         }
 
-        if (currentSaldo === 0) {
-            previousSaldo = currentSaldo = startSaldo;
+        if (originalSaldo !== startSaldo) {
+            originalSaldo = previousSaldo = currentSaldo = startSaldo;
             simulation = new SaldoSimulation(startSaldo);
             console.log('Simulation is started with saldo ' + startSaldo);
         }
