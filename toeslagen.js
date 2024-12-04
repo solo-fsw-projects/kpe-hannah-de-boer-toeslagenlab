@@ -52,7 +52,7 @@
             previousButton.style.display = 'block';
             console.log('Previous button is enabled');
         }
-        else if (!enable && previousButton.style.display === 'flex') {
+        else if (!enable && previousButton.style.display === 'block') {
             previousButton.style.display = '';
             console.log('Previous button is disabled');
         }
