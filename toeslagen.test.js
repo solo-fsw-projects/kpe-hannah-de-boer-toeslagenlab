@@ -1,6 +1,5 @@
 
 const nextButton = document.getElementById("next-button");
-const description = document.getElementById("description");
 
 let monthState = 1;
 let currentMonthIndex = 0;
@@ -18,17 +17,58 @@ nextButton.addEventListener("click", () =>
         console.log('Simulation is done.');
         return;
     }
+
+    let header = document.querySelector(".header");
+    document.querySelector(".progress-bar").remove();
+    let progressBar = document.createElement('div');
+    progressBar.innerHTML = `
+        <div class="progress-bar simulation-start">
+            <div class="line"></div>
+            <div class="circle-container">
+                <div class="circle"></div>
+                <div class="month-name"></div>
+            </div>
+            <div class="saldo">
+                <div class="pinpas"><img src="pinpas.png"/></div>
+                <div class="amount-container">
+                    Je saldo:<br/>
+                    &euro; <div class="amount"></div>
+                </div>
+            </div>
+        </div>
+`;
+    header.appendChild(progressBar);
+
+    let questionText = document.querySelector('.QuestionText');
+
+    switch (monthState) {
+        case 1:
+            questionText.innerHTML = "Je ontvangt inkomen van:<br>{{income}}";
+            break;
+        case 2:
+            questionText.innerHTML = "Je vaste lasten moet je betalen:<br>{{fixed_expenses}}";
+            break;
+        case 3:
+            let variableExpense = window.toeslagen.getNextVariableExpense(false);
+            if (variableExpense === null) {
+                questionText.textContent = "Geen variabele uitgaven meer deze maand.";
+            } else {
+                questionText.textContent = `{{variable_expense_description}} met een bedrag van {{variable_expense_amount}} euro.`;
+            }
+            break;
+        case 4:
+            console.log('monthState reached 4 not possible!');
+    }
+
     window.toeslagen.runOnNewSlide(0, 526, month.name);
 
     switch (monthState) {
         case 1:
             window.toeslagen.applyIncomes();
-            description.innerHTML = "Je ontvangt inkomen van:<br><br>" + window.toeslagen.getIncomes().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
             monthState++;
             break;
         case 2:
             window.toeslagen.applyFixedExpenses();
-            description.innerHTML = "Je vaste lasten moet je betalen:<br><br>" + window.toeslagen.getFixedExpenses().map(item => `${item.getName()}: ${item.getAmount()}`).join('<br>') + '.';
             monthState++;
             break;
         case 3:
@@ -36,14 +76,13 @@ nextButton.addEventListener("click", () =>
             if (variableExpense === null) {
                 currentMonthIndex++;
                 monthState = 1;
-                description.textContent = "Geen variabele uitgaven meer deze maand.";
             } else {
                 window.toeslagen.applyVariableExpense();
-                description.textContent = `${variableExpense.getDescription() ?? variableExpense.getName()} met een bedrag van ${variableExpense.getAmount()} euro.`;
             }
             break;
         case 4:
             console.log('monthState reached 4 not possible!');
     }
+
 });
 
