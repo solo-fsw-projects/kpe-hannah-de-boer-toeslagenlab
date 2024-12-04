@@ -302,7 +302,7 @@
         const progressBar = document.querySelector(".progress-bar");
         const circleContainer = document.querySelector(".circle-container");
 
-        const percentage = (months.indexOf(month) / (months.length - 1)) * 50;
+        const percentage = (months.indexOf(month) / (months.length - 1)) * 65;
         const monthNameElement = progressBar.querySelector(".month-name");
 
         circleContainer.style.left = `calc(${percentage}% - 18px)`;
