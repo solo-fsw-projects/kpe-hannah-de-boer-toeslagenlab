@@ -10,12 +10,12 @@
     let currentMonth = null;
 
     runOnNewSlide = function (enablePreviousButton, startSaldo, currentMonthName) {
+        doPreviousButton(enablePreviousButton);
+
         if (!months) {
             initMonths();
             return;
         }
-
-        doPreviousButton(enablePreviousButton);
 
         if (!startSaldo || startSaldo === 0) {
             return;
