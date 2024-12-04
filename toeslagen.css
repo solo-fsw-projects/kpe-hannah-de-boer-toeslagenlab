@@ -78,3 +78,7 @@
 .amount {
     display: inline;
 }
+
+.Skin .Matrix .Likert .SingleAnswer table th {
+    text-align: center;
+}
