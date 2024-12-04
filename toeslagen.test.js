@@ -60,7 +60,7 @@ nextButton.addEventListener("click", () =>
             console.log('monthState reached 4 not possible!');
     }
 
-    window.toeslagen.runOnNewSlide(0, 526, month.name);
+    window.toeslagen.runOnNewSlide(Math.random() < 0.5 ? 0 : 1, 526, month.name);
 
     switch (monthState) {
         case 1:
