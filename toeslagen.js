@@ -34,6 +34,10 @@
             return;
         }
 
+        if (currentSaldo !== previousSaldo) {
+            doPreviousButton(0);
+        }
+
         replaceQuestionTextVariables(currentMonth);
 
         updateProgressBar(currentMonth);

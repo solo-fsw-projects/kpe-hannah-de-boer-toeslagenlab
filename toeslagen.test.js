@@ -66,7 +66,10 @@ nextButton.addEventListener("click", () =>
     } else {
         startSaldo = 526;
     }
-    window.toeslagen.runOnNewSlide(Math.random() < 0.5 ? 0 : 1, startSaldo, month.name);
+
+    //let previousButton = Math.random() < 0.5 ? 0 : 1;
+    let previousButton = 1;
+    window.toeslagen.runOnNewSlide(previousButton, startSaldo, month.name);
 
     switch (monthState) {
         case 1:
