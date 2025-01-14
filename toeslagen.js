@@ -10,11 +10,11 @@
     let months = null;
     let currentMonth = null;
 
-    runOnNewSlide = function (enablePreviousButton, startSaldo, currentMonthName) {
+    runOnNewSlide = function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName) {
         doPreviousButton(enablePreviousButton);
 
         if (!months) {
-            initMonths();
+            initMonths(sheetUrl);
             return;
         }
 
@@ -338,9 +338,8 @@
         step();
     }
 
-    async function initMonths() {
-        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS92k3uxW_oUM0QMdz55LwCihJL8I9LeAsN_N7CiUdILqSoxp33-wenoJdHzQjFd0KXoA8HWvcwC71S/pub?gid=1011705160&single=true&output=csv'; // Replace with your URL
-        let csvData = fetchCSV(await fetchURLContent(url));
+    async function initMonths(sheetUrl) {
+        let csvData = fetchCSV(await fetchURLContent(sheetUrl));
         months = convertCSVToObjects(csvData);
         if (months.length === 0) {
             console.error('No months found in csv data');
@@ -356,7 +355,7 @@
             }
             return await response.text();
         } catch (error) {
-            console.error('Error fetching the URL:', error);
+            console.error('Error fetching the sheet contents, please check the URL:', error);
             return null;
         }
     }
