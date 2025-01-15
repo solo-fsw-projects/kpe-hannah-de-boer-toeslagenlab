@@ -13,20 +13,21 @@
     runOnNewSlide = function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName) {
         doPreviousButton(enablePreviousButton);
 
-        if (!months) {
+        if (canMonthsBeInitialized(sheetUrl)) {
             initMonths(sheetUrl);
-            return;
         }
 
-        if (!startSaldo || startSaldo === 0) {
-            return;
+        if (isMonthsEmptyAfterInitialization()) {
+            console.error('Months is not initialized because of earlier error, cannot proceed.');
         }
 
         if (originalSaldo !== startSaldo) {
+            // Start a new simulation when the start saldo changes
             originalSaldo = previousSaldo = currentSaldo = startSaldo;
             simulation = new SaldoSimulation(startSaldo);
             console.log('Simulation is started with saldo ' + startSaldo);
         }
+
         currentSaldo = simulation.getSaldo();
         currentMonth = months.find(month => month.name === currentMonthName);
         if (!currentMonth) {
@@ -38,6 +39,7 @@
             doPreviousButton(0);
         }
 
+        // Replace variables in the dynamic blocks
         replaceQuestionTextVariables(currentMonth);
 
         updateProgressBar(currentMonth);
@@ -45,6 +47,14 @@
 
         previousSaldo = currentSaldo;
         console.log('Progress bar is updated');
+    }
+
+    function canMonthsBeInitialized(sheetUrl) {
+        return months === null && sheetUrl.length > 0;
+    }
+
+    function isMonthsEmptyAfterInitialization() {
+        return Array.isArray(months) && months.length === 0;
     }
 
     function doPreviousButton(enable) {
