@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/app
       - ./.bash_history:/.bash_history
-    command: "node --inspect=0.0.0.0:9229 webserver.js"
+#    command: "node --inspect=0.0.0.0:9229 webserver.js"
     ports:
       - "8080:8080"
       - "9229:9229"
