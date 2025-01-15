@@ -1,1 +1,1 @@
-../../toeslagen.js
+../../src/toeslagen.js

@@ -10,11 +10,11 @@
     let months = null;
     let currentMonth = null;
 
-    runOnNewSlide = function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName) {
+    runOnNewSlide = async function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName) {
         doPreviousButton(enablePreviousButton);
 
         if (canMonthsBeInitialized(sheetUrl)) {
-            initMonths(sheetUrl);
+            await initMonths(sheetUrl);
         }
 
         if (simulationIsNotStarted(startSaldo)) {
@@ -47,7 +47,7 @@
         replaceQuestionTextVariables(currentMonth);
 
         updateProgressBar(currentMonth);
-        updateAmount(previousSaldo,  currentSaldo);
+        updateAmount(previousSaldo, currentSaldo);
 
         previousSaldo = currentSaldo;
         console.log('Progress bar is updated');
