@@ -17,6 +17,10 @@
             initMonths(sheetUrl);
         }
 
+        if (simulationIsNotStarted(startSaldo)) {
+            return;
+        }
+
         if (isMonthsEmptyAfterInitialization()) {
             console.error('Months is not initialized because of earlier error, cannot proceed.');
         }
@@ -55,6 +59,10 @@
 
     function isMonthsEmptyAfterInitialization() {
         return Array.isArray(months) && months.length === 0;
+    }
+
+    function simulationIsNotStarted(startSaldo) {
+        return startSaldo === 0 && simulation === null;
     }
 
     function doPreviousButton(enable) {
