@@ -1,23 +1,26 @@
-<div class="progress-bar">
-    <div class="line"></div>
+<div class="progress-bar ${e://Field/header}">
+    <div class="line">&nbsp;</div>
+
     <div class="circle-container">
-        <div class="circle"></div>
-        <div class="month-name"></div>
+        <div class="circle">&nbsp;</div>
+
+        <div class="month-name">&nbsp;</div>
     </div>
+
     <div class="saldo">
-        <div class="pinpas"><img src="https://www.chrisdejager.nl/toeslagen/pinpas.png"/></div>
-        <div class="amount-container">
-            Je saldo:<br/>
-            &euro; <div class="amount"></div>
+        <div class="pinpas"><img src="https://www.chrisdejager.nl/toeslagen/pinpas.png" /></div>
+
+        <div class="amount-container">Je saldo:<br />
+            &euro;
+            <div class="amount">&nbsp;</div>
         </div>
     </div>
 </div>
-
 <script>
 
     if (!window.toeslagen) {
         const script = document.createElement('script');
-        script.src = 'https://www.chrisdejager.nl/toeslagen/toeslagen.js';
+        script.src = 'https://www.chrisdejager.nl/toeslagen/v2/toeslagen.js';
         script.defer = true;
         script.onload = () => { init(); };
         document.body.appendChild(script);
@@ -27,9 +30,8 @@
     }
 
     function init() {
-        Qualtrics.SurveyEngine.addOnReady(function()
-        {
-            window.toeslagen.runOnNewSlide(parseInt('${e://Field/enable_previous_button}'), parseInt('${e://Field/start_saldo}'), '${e://Field/month}');
+        Qualtrics.SurveyEngine.addOnReady(function() {
+            window.toeslagen.runOnNewSlide('${e://Field/google_sheet_csv_url}', parseInt('${e://Field/enable_previous_button}'), parseInt('${e://Field/start_saldo}'), '${e://Field/month}');
         });
     }
 
