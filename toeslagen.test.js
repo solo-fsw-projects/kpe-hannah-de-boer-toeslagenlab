@@ -3,12 +3,14 @@ const nextButton = document.getElementById("next-button");
 
 let monthState = 1;
 let currentMonthIndex = 0;
+// https://docs.google.com/spreadsheets/d/1x8ek8aaOjty0i4IEAOlMYD4EwlBQpfzPmWUC8YuxsT0/edit?gid=1011705160#gid=1011705160
+let sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQhHwzTIG10KlxZ5stSQ1vuBsVbz9rSk-s4aqaSxNhOcQ4ERUynXJxCk7S4RKJ7u_PaF8XH4gv7pI8e/pub?gid=1011705160&single=true&output=csv";
 
 nextButton.addEventListener("click", () =>
 {
     months = window.toeslagen.getMonths();
     if (months === null) {
-        window.toeslagen.runOnNewSlide();
+        window.toeslagen.runOnNewSlide(sheetUrl, 1, 0);
         console.log("first time load months");
         return;
     }
@@ -67,9 +69,7 @@ nextButton.addEventListener("click", () =>
         startSaldo = 526;
     }
 
-    //let previousButton = Math.random() < 0.5 ? 0 : 1;
-    let previousButton = 1;
-    window.toeslagen.runOnNewSlide(previousButton, startSaldo, month.name);
+    window.toeslagen.runOnNewSlide(sheetUrl, 1, startSaldo, month.name);
 
     switch (monthState) {
         case 1:
