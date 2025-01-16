@@ -63,13 +63,16 @@ nextButton.addEventListener("click", () =>
     }
 
     let startSaldo;
+    let toeslagPercentage;
     if (currentMonthIndex === 2) {
         startSaldo = 10000;
+        toeslagPercentage = 50;
     } else {
         startSaldo = 526;
+        toeslagPercentage = 10;
     }
 
-    window.toeslagen.runOnNewSlide(sheetUrl, 1, startSaldo, month.name);
+    window.toeslagen.runOnNewSlide(sheetUrl, 1, startSaldo, month.name, 'Huurtoeslag', 10);
 
     switch (monthState) {
         case 1:

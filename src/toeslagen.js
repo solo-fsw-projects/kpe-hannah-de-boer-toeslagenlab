@@ -9,8 +9,10 @@
     let simulation = null;
     let months = null;
     let currentMonth = null;
+    let toeslagNaam = '';
+    let toeslagPercentage = 0;
 
-    runOnNewSlide = async function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName) {
+    runOnNewSlide = async function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
         doPreviousButton(enablePreviousButton);
 
         if (canMonthsBeInitialized(sheetUrl)) {
@@ -23,6 +25,12 @@
 
         if (isMonthsEmptyAfterInitialization()) {
             console.error('Months is not initialized because of earlier error, cannot proceed.');
+        }
+
+        if (currentToeslagNaam !== '' && toeslagNaam !== currentToeslagNaam) {
+            toeslagNaam = currentToeslagNaam;
+            toeslagPercentage = currentToeslagPercentage;
+            applyToeslagPercentageToIncomes();
         }
 
         if (originalSaldo !== startSaldo) {
@@ -53,18 +61,6 @@
         console.log('Progress bar is updated');
     }
 
-    function canMonthsBeInitialized(sheetUrl) {
-        return months === null && sheetUrl.length > 0;
-    }
-
-    function isMonthsEmptyAfterInitialization() {
-        return Array.isArray(months) && months.length === 0;
-    }
-
-    function simulationIsNotStarted(startSaldo) {
-        return startSaldo === 0 && simulation === null;
-    }
-
     function doPreviousButton(enable) {
         let previousButton = document.querySelector('#PreviousButton');
         if (!previousButton) {
@@ -78,6 +74,36 @@
         else if (!enable && previousButton.style.display === 'block') {
             previousButton.style.display = '';
             console.log('Previous button is disabled');
+        }
+    }
+
+    function canMonthsBeInitialized(sheetUrl) {
+        return months === null && sheetUrl.length > 0;
+    }
+
+    function isMonthsEmptyAfterInitialization() {
+        return Array.isArray(months) && months.length === 0;
+    }
+
+    function simulationIsNotStarted(startSaldo) {
+        return startSaldo === 0 && simulation === null;
+    }
+
+    function applyToeslagPercentageToIncomes() {
+        if (toeslagNaam === '') {
+            return;
+        }
+
+        let toeslagPercentageApplied = false;
+        months.forEach(month => month.getIncomes().forEach(income => {
+            if (income.getName() === toeslagNaam) {
+                income.setPercentage(toeslagPercentage);
+                toeslagPercentageApplied = true;
+            }
+        }));
+
+        if (!toeslagPercentageApplied) {
+            console.error(`Kan toeslag_naam '${toeslagNaam}' niet vinden in de sheet input`);
         }
     }
 
@@ -101,7 +127,7 @@
             let variableExpense = currentMonth.getNextVariableExpense(false);
             switch (variable) {
                 case 'income':
-                    content = replaceByList(content, placeholder, currentMonth.getIncomes());
+                    content = replaceByList(content, placeholder, currentMonth.getIncomes(toeslagNaam, toeslagPercentage));
                     break;
                 case 'fixed_expenses':
                     content = replaceByList(content, placeholder, currentMonth.getFixedExpenses());
@@ -168,6 +194,9 @@
             this.variableExpenses.push(expense);
         }
 
+        /**
+         * @return {Income[]}
+         */
         getIncomes() {
             return this.incomes;
         }
@@ -197,14 +226,23 @@
         constructor(name, amount) {
             this.name = name;
             this.amount = parseInt(amount);
+            this.percentage = 100;
+        }
+
+        getOriginalAmount() {
+            return this.amount;
         }
 
         getAmount() {
-            return this.amount;
+            return Math.round(this.amount * (this.percentage / 100));
         }
 
         getName() {
             return this.name;
+        }
+
+        setPercentage(percentage) {
+            this.percentage = percentage;
         }
     }
 
@@ -233,6 +271,9 @@
             this.saldo = startSaldo;
         }
 
+        /**
+         * @param {Income[]} incomes
+         */
         applyIncomes(incomes) {
             incomes.forEach(income => {
                 this.saldo += income.getAmount();
@@ -395,12 +436,6 @@
         return months;
     }
 
-    getIncomes = function () {
-        return currentMonth.getIncomes();
-    }
-    getFixedExpenses = function () {
-        return currentMonth.getIncomes();
-    }
     getNextVariableExpense = function () {
         return currentMonth.getNextVariableExpense(false);
     }
@@ -411,8 +446,6 @@
         applyFixedExpenses,
         applyVariableExpense,
         getMonths,
-        getIncomes,
-        getFixedExpenses,
         getNextVariableExpense
     };
 
