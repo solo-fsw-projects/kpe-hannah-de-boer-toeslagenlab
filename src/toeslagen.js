@@ -102,7 +102,10 @@
             }
         }));
 
-        if (!toeslagPercentageApplied) {
+        if (toeslagPercentageApplied) {
+            console.log(`Een percentage van '${toeslagPercentasgetoeslag}' voor '${toeslagNaam}' toegepast op de simulatie.`)
+        }
+        else {
             console.error(`Kan toeslag_naam '${toeslagNaam}' niet vinden in de sheet input`);
         }
     }
