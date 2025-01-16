@@ -7,12 +7,18 @@ services:
     volumes:
       - .:/app
       - ./.bash_history:/.bash_history
-#    command: "node --inspect=0.0.0.0:9229 webserver.js"
     ports:
-      - "8080:8080"
       - "9229:9229"
       - "3000:3000"
     user: ${HOST_UID}:${HOST_GID}
+
+  webserver:
+    extends:
+      service: node
+    container_name: webserver
+    command: "node --inspect=0.0.0.0:9229 webserver.js"
+    ports:
+      - "8080:8080"
 
 volumes:
   node_modules:

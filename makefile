@@ -8,3 +8,5 @@ init:
 	touch .bash_history
 	docker compose run --rm node npm install
 
+webserver:
+	docker compose up -d webserver
