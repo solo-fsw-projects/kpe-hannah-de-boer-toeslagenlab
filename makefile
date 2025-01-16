@@ -1,11 +1,10 @@
 export HOST_GID = $(shell id -g)
 export HOST_UID = $(shell id -u)
 
-up:
-	docker compose up node -d
+console:
+	docker compose run --rm node /bin/bash
 
-console: up
-	docker compose exec node /bin/bash
+init:
+	touch .bash_history
+	docker compose run --rm node npm install
 
-down:
-	docker compose down
