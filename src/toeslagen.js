@@ -86,7 +86,7 @@
     }
 
     function simulationIsNotStarted(startSaldo) {
-        return startSaldo === 0 && simulation === null;
+        return (!startSaldo || startSaldo === 0) && simulation === null;
     }
 
     function applyToeslagPercentageToIncomes() {
