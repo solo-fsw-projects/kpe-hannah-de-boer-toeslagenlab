@@ -103,7 +103,7 @@
         }));
 
         if (toeslagPercentageApplied) {
-            console.log(`Een percentage van '${toeslagPercentage}' voor '${toeslagNaam}' toegepast op de simulatie.`)
+            console.log(`Er wordt ${toeslagPercentage} procent van ${toeslagNaam} gebruikt in de simulatie.`)
         }
         else {
             console.error(`Kan toeslag_naam '${toeslagNaam}' niet vinden in de sheet input`);
