@@ -1,0 +1,11 @@
+image: node:20
+
+pipelines:
+  default:
+    - step:
+        name: Test
+        caches:
+          - node
+        script:
+          - npm ci  # Clean install of dependencies
+          - npm test
