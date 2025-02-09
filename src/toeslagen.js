@@ -401,7 +401,12 @@
     }
 
     async function initMonths(sheetUrl) {
-        let csvData = fetchCSV(await fetchURLContent(sheetUrl));
+        const content = await fetchURLContent(sheetUrl);
+        if (content === null) {
+            months = [];
+            return;
+        }
+        let csvData = fetchCSV(content);
         months = convertCSVToObjects(csvData);
         if (months.length === 0) {
             console.error('No months found in csv data');
