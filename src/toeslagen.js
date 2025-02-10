@@ -15,6 +15,7 @@
     runOnNewSlide = async function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
         doPreviousButton(enablePreviousButton);
 
+        // Initialize months if needed
         if (canMonthsBeInitialized(sheetUrl)) {
             await initMonths(sheetUrl);
         }
@@ -67,12 +68,11 @@
             return;
         }
 
-        if (enable && previousButton.style.display === '') {
+        if (enable) {
             previousButton.style.display = 'block';
             console.log('Previous button is enabled');
-        }
-        else if (!enable && previousButton.style.display === 'block') {
-            previousButton.style.display = '';
+        } else {
+            previousButton.style.display = 'none';
             console.log('Previous button is disabled');
         }
     }
@@ -337,16 +337,33 @@
     }
 
     function convertCSVToObjects(csvData) {
+        if (!Array.isArray(csvData) || csvData.length < 2) {
+            return [];
+        }
+
         const [headers, ...rows] = csvData;
+        if (!Array.isArray(headers) || headers.length < 8) {
+            return [];
+        }
+
         const months = [];
         let currentMonth = null;
 
         rows.forEach(row => {
+            if (!Array.isArray(row) || row.length < 8) {
+                return;
+            }
+
             const [month, incomeSource, incomeAmount, fixedExpense, fixedAmount, variableExpense, variableDescription, variableAmount] = row;
 
             if (month) {
                 currentMonth = new Month(month);
                 months.push(currentMonth);
+            }
+
+            if (!currentMonth) {
+                console.error('No initial month found');
+                return;
             }
 
             if (incomeSource && incomeAmount) {
