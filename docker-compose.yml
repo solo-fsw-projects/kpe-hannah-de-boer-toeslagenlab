@@ -10,7 +10,7 @@ services:
     ports:
       - "9229:9229"
       - "3000:3000"
-    user: ${HOST_UID}:${HOST_GID}
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
 
   webserver:
     extends:
@@ -20,5 +20,18 @@ services:
     ports:
       - "8080:8080"
 
-volumes:
-  node_modules:
+  test:
+    extends:
+      service: node
+    container_name: toeslagen-test
+    command: sh -c 'npm install && npm test'
+    volumes:
+      - .:/app
+
+  test-watch:
+    extends:
+      service: node
+    container_name: toeslagen-test-watch
+    command: sh -c 'npm install && npm run test:watch'
+    volumes:
+      - .:/app

@@ -1,10 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-const mockFetch = require('./mocks/fetch');
-
-require('../src/toeslagen');
-const fs = require('fs');
+import { jest } from '@jest/globals';
+import mockFetch from '../mocks/fetch.js';
+import '@/toeslagen.js';
+import fs from 'fs';
 
 describe('Toeslagen Module Tests', () => {
     let sheetCsv;
@@ -30,15 +30,9 @@ describe('Toeslagen Module Tests', () => {
             </div>
         `;
         
-        // Reset global state by clearing require cache
-        jest.resetModules();
-        
         // Setup mock data
         sheetCsv = fs.readFileSync('tests/sheet1.csv').toString();
         window.fetch = mockFetch(sheetCsv);
-        
-        // Initialize toeslagen module
-        require('../src/toeslagen');
     });
 
     describe('Data Loading', () => {

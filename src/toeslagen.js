@@ -1,65 +1,61 @@
 
+import { SimulationManager } from './application/SimulationManager.js';
+import { UIManager } from './presentation/UIManager.js';
+
 (function () {
-
     console.log('toeslagen.js is loaded.');
+    
+    const simulationManager = new SimulationManager();
 
-    let originalSaldo = 0;
-    let currentSaldo = 0;
-    let previousSaldo = 0;
-    let simulation = null;
-    let months = null;
-    let currentMonth = null;
-    let toeslagNaam = '';
-    let toeslagPercentage = 0;
+    async function runOnNewSlide(sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
+        UIManager.togglePreviousButton(enablePreviousButton);
 
-    runOnNewSlide = async function (sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
-        doPreviousButton(enablePreviousButton);
+        try {
+            // Initialize simulation if needed
+            await simulationManager.initialize(sheetUrl);
+            
+            if (!simulationManager.isInitialized()) {
+                console.error('Simulation not initialized - missing or invalid data');
+                return;
+            }
 
-        // Initialize months if needed
-        if (canMonthsBeInitialized(sheetUrl)) {
-            await initMonths(sheetUrl);
+            // Start or update simulation
+            if (startSaldo > 0 && simulationManager.originalSaldo !== startSaldo) {
+                simulationManager.startNewSimulation(startSaldo);
+            }
+
+            // Update toeslag settings if changed
+            if (currentToeslagNaam) {
+                simulationManager.updateToeslagSettings(currentToeslagNaam, currentToeslagPercentage);
+            }
+
+            // Update current month
+            if (!simulationManager.updateCurrentMonth(currentMonthName)) {
+                return;
+            }
+
+            const currentSaldo = simulationManager.getCurrentSaldo();
+            const previousSaldo = simulationManager.getPreviousSaldo();
+
+            // Update UI
+            if (currentSaldo !== previousSaldo) {
+                UIManager.togglePreviousButton(false);
+            }
+
+            UIManager.replaceQuestionTextVariables(
+                simulationManager.currentMonth,
+                simulationManager.toeslagNaam,
+                simulationManager.toeslagPercentage
+            );
+
+            UIManager.updateProgressBar(simulationManager.currentMonth);
+            UIManager.updateAmount(previousSaldo, currentSaldo);
+
+            simulationManager.updatePreviousSaldo();
+            console.log('Slide update completed successfully');
+        } catch (error) {
+            console.error('Error in runOnNewSlide:', error);
         }
-
-        if (simulationIsNotStarted(startSaldo)) {
-            return;
-        }
-
-        if (isMonthsEmptyAfterInitialization()) {
-            console.error('Months is not initialized because of earlier error, cannot proceed.');
-        }
-
-        if (currentToeslagNaam !== '' && toeslagNaam !== currentToeslagNaam) {
-            toeslagNaam = currentToeslagNaam;
-            toeslagPercentage = currentToeslagPercentage;
-            applyToeslagPercentageToIncomes();
-        }
-
-        if (originalSaldo !== startSaldo) {
-            // Start a new simulation when the start saldo changes
-            originalSaldo = previousSaldo = currentSaldo = startSaldo;
-            simulation = new SaldoSimulation(startSaldo);
-            console.log('Simulation is started with saldo ' + startSaldo);
-        }
-
-        currentSaldo = simulation.getSaldo();
-        currentMonth = months.find(month => month.name === currentMonthName);
-        if (!currentMonth) {
-            console.error(`Cannot find ${currentMonthName} in months data`);
-            return;
-        }
-
-        if (currentSaldo !== previousSaldo) {
-            doPreviousButton(0);
-        }
-
-        // Replace variables in the dynamic blocks
-        replaceQuestionTextVariables(currentMonth);
-
-        updateProgressBar(currentMonth);
-        updateAmount(previousSaldo, currentSaldo);
-
-        previousSaldo = currentSaldo;
-        console.log('Progress bar is updated');
     }
 
     function doPreviousButton(enable) {
@@ -467,11 +463,10 @@
 
     window.toeslagen = {
         runOnNewSlide,
-        applyIncomes,
-        applyFixedExpenses,
-        applyVariableExpense,
-        getMonths,
-        getNextVariableExpense
+        getMonths: () => simulationManager.months,
+        applyIncomes: () => simulationManager.applyIncomes(),
+        applyFixedExpenses: () => simulationManager.applyFixedExpenses(),
+        applyVariableExpense: () => simulationManager.applyVariableExpense()
     };
 
 })();
