@@ -1,5 +1,27 @@
 export class UIManager {
+    static showLoading() {
+        const loading = document.querySelector('#loading');
+        if (loading) {
+            loading.style.display = 'block';
+        }
+    }
+
+    static hideLoading() {
+        const loading = document.querySelector('#loading');
+        if (loading) {
+            loading.style.display = 'none';
+        }
+    }
+
     static updateProgressBar(month) {
+        if (!month) return;
+
+        // Update month name
+        const monthName = document.querySelector('.month-name');
+        if (monthName) {
+            monthName.textContent = month.name;
+        }
+
         const circles = document.querySelectorAll('.circle');
         circles.forEach((circle, index) => {
             circle.classList.remove('active');
@@ -13,13 +35,8 @@ export class UIManager {
         const amountElement = document.querySelector('.amount');
         if (!amountElement) return;
 
-        const formatter = new Intl.NumberFormat('nl-NL', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
         if (currentAmount === newAmount) {
-            amountElement.textContent = formatter.format(newAmount);
+            amountElement.textContent = newAmount;
             return;
         }
 
@@ -32,8 +49,8 @@ export class UIManager {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            const current = start + (end - start) * progress;
-            amountElement.textContent = formatter.format(current);
+            const current = Math.round(start + (end - start) * progress);
+            amountElement.textContent = current;
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
@@ -45,11 +62,18 @@ export class UIManager {
 
     static replaceQuestionTextVariables(currentMonth, toeslagNaam, toeslagPercentage) {
         const questionText = document.querySelector('.QuestionText');
-        if (!questionText) return;
+        if (!questionText || !currentMonth) return;
 
         const variables = {
-            'income': () => this.replaceByList(currentMonth.getIncomes(toeslagNaam, toeslagPercentage)),
-            'fixed_expenses': () => this.replaceByList(currentMonth.getFixedExpenses()),
+            'income': () => this.replaceByList(currentMonth.getIncomes(), item => {
+                const amount = item.getName() === toeslagNaam ? 
+                    Math.round(item.getAmount() * toeslagPercentage / 100) : 
+                    item.getAmount();
+                return `${item.getName()} € ${amount}`;
+            }),
+            'fixed_expenses': () => this.replaceByList(currentMonth.getFixedExpenses(), 
+                item => `${item.getName()} € ${item.getAmount()}`
+            ),
             'variable_expense_name': () => {
                 const expense = currentMonth.getNextVariableExpense(false);
                 return expense ? expense.getName() : '{{ERROR}}';
@@ -73,9 +97,9 @@ export class UIManager {
         questionText.innerHTML = content;
     }
 
-    static replaceByList(items) {
+    static replaceByList(items, formatter) {
         return `<ul>${items.map(item => 
-            `<li>${item.getName()} &euro; ${item.getAmount()}</li>`
+            `<li>${formatter(item)}</li>`
         ).join('')}</ul>`;
     }
 

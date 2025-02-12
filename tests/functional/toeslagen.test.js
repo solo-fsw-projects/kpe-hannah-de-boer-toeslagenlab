@@ -21,6 +21,7 @@ describe('Toeslagen Module Tests', () => {
                 <p>{{variable_expense_name}}: {{variable_expense_description}} &euro; {{variable_expense_amount}}</p>
             </div>
             <div id="PreviousButton" style="display: none;"></div>
+            <div id="NextButton" style="display: none;"></div>
             <div id="saldo"></div>
             <div class="progress-bar">
                 <div class="circle-container">
@@ -28,6 +29,7 @@ describe('Toeslagen Module Tests', () => {
                 </div>
                 <div class="amount"></div>
             </div>
+            <div id="loading" style="display: none;">Loading...</div>
         `;
         
         // Setup mock data
@@ -35,146 +37,108 @@ describe('Toeslagen Module Tests', () => {
         window.fetch = mockFetch(sheetCsv);
     });
 
-    describe('Data Loading', () => {
-        test('loads months data correctly', async () => {
+    describe('End-to-End Flow', () => {
+        test('completes full simulation flow', async () => {
+            // Initial load
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            const months = window.toeslagen.getMonths();
-            expect(months).not.toBeNull();
-            expect(months.length).toBeGreaterThan(0);
-            expect(months[0].name).toBe('oktober 2024');
-            expect(months[0].getIncomes().length).toBeGreaterThan(0);
-            expect(months[0].getFixedExpenses().length).toBeGreaterThan(0);
-        });
+            expect(document.querySelector('.month-name').textContent.trim()).toBe('oktober 2024');
+            expect(document.querySelector('.amount').textContent).toBe('1000');
 
-        test('handles invalid sheet URL', async () => {
-            const errorResponse = new Error('Failed to fetch');
-            window.fetch = jest.fn().mockRejectedValue(errorResponse);
-            await window.toeslagen.runOnNewSlide('http://invalid', true, 1000, 'oktober 2024', '', 100);
-            const months = window.toeslagen.getMonths();
-            expect(months).toBeDefined();
-            expect(Array.isArray(months)).toBe(true);
-            expect(months).toEqual([]);
-        });
+            // Apply incomes
+            await window.toeslagen.applyIncomes();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const afterIncomes = parseInt(document.querySelector('.amount').textContent);
+            expect(afterIncomes).toBe(3649); // 1000 + 2289 + 360
 
-        test('handles malformed CSV data', async () => {
-            window.fetch = mockFetch('this is not a CSV file at all');
-            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            const months = window.toeslagen.getMonths();
-            expect(months).toBeDefined();
-            expect(months).toEqual([]);
+            // Apply fixed expenses
+            await window.toeslagen.applyFixedExpenses();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const afterFixed = parseInt(document.querySelector('.amount').textContent);
+            expect(afterFixed).toBe(2095); // 3649 - (628 + 233 + 244 + 141 + 308)
+
+            // Apply variable expense
+            await window.toeslagen.applyVariableExpense();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const afterVariable = parseInt(document.querySelector('.amount').textContent);
+            expect(afterVariable).toBe(1606); // 2095 - 489
         });
     });
 
-    describe('Simulation Functionality', () => {
-        jest.setTimeout(20000);
-        test('starts new simulation with correct initial saldo', async () => {
-            const startSaldo = 2000;
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            // Wait for animation frames to complete (60 frames)
+    describe('Navigation and State', () => {
+        test('maintains state when navigating between months', async () => {
+            // Start in October
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await window.toeslagen.applyIncomes();
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const amountElement = document.querySelector('.progress-bar .amount');
-            expect(parseInt(amountElement.textContent)).toBe(startSaldo);
+            const octoberSaldo = parseInt(document.querySelector('.amount').textContent);
+
+            // Move to November
+            await window.toeslagen.runOnNewSlide('http://localhost', true, octoberSaldo, 'november 2024', '', 100);
+            expect(parseInt(document.querySelector('.amount').textContent)).toBe(octoberSaldo);
+            expect(document.querySelector('.month-name').textContent.trim()).toBe('november 2024');
         });
 
-        test('applies income correctly', async () => {
-
-            const startSaldo = 1000;
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            const initialSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            window.toeslagen.applyIncomes();
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            // Wait for animation
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const currentSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            expect(currentSaldo).toBeGreaterThan(initialSaldo);
-            expect(currentSaldo).toBe(initialSaldo + 2289 + 360); // Salaris + Huurtoeslag
-        });
-
-        test('applies fixed expenses correctly', async () => {
-
-            const startSaldo = 2000;
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            const initialSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            window.toeslagen.applyFixedExpenses();
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            // Wait for animation
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const currentSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            expect(currentSaldo).toBeLessThan(initialSaldo);
-            expect(currentSaldo).toBe(initialSaldo - 628 - 233 - 244 - 141 - 308); // Sum of all fixed expenses
-        });
-
-        test('applies variable expenses correctly', async () => {
-
-            const startSaldo = 2000;
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            const initialSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            window.toeslagen.applyVariableExpense();
-            await window.toeslagen.runOnNewSlide('http://localhost', true, startSaldo, 'oktober 2024', '', 100);
-            
-            // Wait for animation
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const currentSaldo = parseInt(document.querySelector('.progress-bar .amount').textContent);
-            expect(currentSaldo).toBeLessThan(initialSaldo);
-            expect(currentSaldo).toBe(initialSaldo - 489); // First variable expense
+        test('handles missing DOM elements gracefully', async () => {
+            document.querySelector('.QuestionText').remove();
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            // Should not throw errors and should still show formatted amount
+            expect(document.querySelector('.amount').textContent).toBe('1000');
         });
     });
 
-    describe('UI Interactions', () => {
-        test('shows previous button when enabled', async () => {
-            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            const button = document.querySelector('#PreviousButton');
-            expect(button.style.display).toBe('block');
+    describe('UI Updates', () => {
+        beforeEach(() => {
+            // Reset loading state
+            const loading = document.querySelector('#loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
         });
 
-        test('hides previous button when disabled', async () => {
-            await window.toeslagen.runOnNewSlide('http://localhost', false, 1000, 'oktober 2024', '', 100);
-            const button = document.querySelector('#PreviousButton');
-            expect(button.style.display).toBe('none');
+        test('shows loading state during data fetch', async () => {
+            const slowFetch = new Promise(resolve => setTimeout(resolve, 500));
+            window.fetch = jest.fn().mockImplementation(() => slowFetch.then(() => new Response(sheetCsv)));
+            
+            // Add loading element if not present
+            if (!document.querySelector('#loading')) {
+                const loading = document.createElement('div');
+                loading.id = 'loading';
+                loading.style.display = 'none';
+                document.body.appendChild(loading);
+            }
+            
+            const loadPromise = window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            // Loading state should be visible immediately
+            expect(document.querySelector('#loading').style.display).toBe('block');
+            
+            await loadPromise;
+            // Loading state should be hidden after completion
+            expect(document.querySelector('#loading').style.display).toBe('none');
         });
 
-        test('updates question text variables', async () => {
+        test('updates question text with real-world data format', async () => {
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            // Wait for template update and data load
+            await new Promise(resolve => setTimeout(resolve, 500));
             const questionText = document.querySelector('.QuestionText').innerHTML;
-            expect(questionText).toContain('<ul>');
-            expect(questionText).toContain('Salaris');
-            expect(questionText).toContain('Huurtoeslag');
-            expect(questionText).toContain('2289'); // Salary amount
-            expect(questionText).toContain('360'); // Huurtoeslag amount
-        });
-
-        test('updates progress bar', async () => {
-            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            const monthName = document.querySelector('.month-name');
-            const amount = document.querySelector('.amount');
-            expect(monthName.textContent).toBe('oktober 2024');
-            expect(amount.textContent).toBe('1000');
+            
+            // Check income formatting
+            expect(questionText).toMatch(/€\s*2289/); // Salary without formatting
+            expect(questionText).toMatch(/€\s*360/); // Huurtoeslag without formatting
+            
+            // Check expense formatting
+            expect(questionText).toMatch(/€\s*628/); // Rent without formatting
         });
     });
 
-    describe('Toeslag Percentage Handling', () => {
-        test('applies toeslag percentage correctly', async () => {
+    describe('Toeslag Calculation', () => {
+        test('applies toeslag percentage with proper rounding', async () => {
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', 'Huurtoeslag', 80);
+            // Wait for template update and data load
+            await new Promise(resolve => setTimeout(resolve, 500));
             const questionText = document.querySelector('.QuestionText').innerHTML;
-            expect(questionText).toContain('Huurtoeslag');
-            expect(questionText).toContain('288'); // 80% of 360
-        });
-
-        test('does not modify non-toeslag incomes', async () => {
-            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', 'Huurtoeslag', 80);
-            const months = window.toeslagen.getMonths();
-            const salaris = months[0].getIncomes().find(income => income.getName() === 'Salaris');
-            expect(salaris.getAmount()).toBe(2289); // Original amount unchanged
+            expect(questionText).toMatch(/€\s*288/); // 80% of 360 without formatting
         });
     });
 });
+

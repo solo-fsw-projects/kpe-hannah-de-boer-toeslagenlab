@@ -42,7 +42,7 @@ describe('UIManager', () => {
 
         test('should update amount immediately if current equals new', () => {
             UIManager.updateAmount(1000, 1000);
-            expect(document.querySelector('.amount').textContent).toBe('1.000,00');
+            expect(document.querySelector('.amount').textContent).toBe('1000');
         });
 
         test('should animate amount change', () => {
@@ -55,7 +55,7 @@ describe('UIManager', () => {
             expect(midNumber).toBeLessThan(2000);
 
             jest.advanceTimersByTime(500); // Complete animation
-            expect(document.querySelector('.amount').textContent).toBe('1.992,00');
+            expect(document.querySelector('.amount').textContent).toBe('1992');
         });
     });
 

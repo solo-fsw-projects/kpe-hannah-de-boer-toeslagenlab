@@ -18,27 +18,38 @@ export class CSVService {
         }
 
         const months = new Map();
+        let currentMonth = null;
+
         lines.slice(1).forEach(line => {
             if (!line.trim()) return;
             
-            const [monthName, type, name, description, amount] = line.split(',').map(field => field.trim());
+            const fields = line.split(',').map(field => field.trim());
+            const monthName = fields[0];
+            const income = fields[1];
+            const incomeAmount = fields[2];
+            const fixedExpense = fields[3];
+            const fixedAmount = fields[4];
+            const variableExpense = fields[5];
+            const variableDescription = fields[6];
+            const variableAmount = fields[7];
             
-            if (!months.has(monthName)) {
-                months.set(monthName, new Month(monthName));
+            if (monthName) {
+                currentMonth = new Month(monthName);
+                months.set(monthName, currentMonth);
+            }
+
+            if (!currentMonth) return;
+            
+            if (income && incomeAmount) {
+                currentMonth.addIncome(new Income(income, parseInt(incomeAmount)));
             }
             
-            const month = months.get(monthName);
+            if (fixedExpense && fixedAmount) {
+                currentMonth.addFixedExpense(new Expense(fixedExpense, '', parseInt(fixedAmount)));
+            }
             
-            switch(type.toLowerCase()) {
-                case 'income':
-                    month.addIncome(new Income(name, amount));
-                    break;
-                case 'fixed':
-                    month.addFixedExpense(new Expense(name, description, amount));
-                    break;
-                case 'variable':
-                    month.addVariableExpense(new Expense(name, description, amount));
-                    break;
+            if (variableExpense && variableAmount) {
+                currentMonth.addVariableExpense(new Expense(variableExpense, variableDescription, parseInt(variableAmount)));
             }
         });
 

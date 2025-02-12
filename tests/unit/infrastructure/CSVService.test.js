@@ -10,7 +10,7 @@ describe('CSVService', () => {
 
     describe('fetchCSV', () => {
         test('should fetch CSV data successfully', async () => {
-            const mockCSVData = 'month,type,name,description,amount\nJanuary,income,Salary,,2000';
+            const mockCSVData = 'month,income,amount,fixed expenses,amount,variable expense,description,amount\nJanuary,Salary,2000,,,,,';
             global.fetch.mockResolvedValueOnce({
                 ok: true,
                 text: () => Promise.resolve(mockCSVData)
@@ -35,7 +35,7 @@ describe('CSVService', () => {
 
     describe('convertCSVToObjects', () => {
         test('should convert CSV data to Month objects', () => {
-            const csvData = 'month,type,name,description,amount\nJanuary,income,Salary,,2000\nJanuary,fixed,Rent,Monthly rent,800\nJanuary,variable,Groceries,Weekly groceries,200\nFebruary,income,Salary,,2000';
+            const csvData = 'month,income,amount,fixed expenses,amount,variable expense,description,amount\nJanuary,Salary,2000,Rent,800,Groceries,Weekly groceries,200\n,,,,,,,\nFebruary,Salary,2000,,,,,';
 
             const months = CSVService.convertCSVToObjects(csvData);
 
@@ -67,7 +67,7 @@ describe('CSVService', () => {
         });
 
         test('should handle unknown transaction types', () => {
-            const csvData = 'month,type,name,description,amount\nJanuary,unknown,Test,,100';
+            const csvData = 'month,income,amount,fixed expenses,amount,variable expense,description,amount\nJanuary,,,,,,,';
 
             const months = CSVService.convertCSVToObjects(csvData);
             expect(months).toHaveLength(1);

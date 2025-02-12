@@ -9,6 +9,7 @@ import { UIManager } from './presentation/UIManager.js';
 
     async function runOnNewSlide(sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
         UIManager.togglePreviousButton(enablePreviousButton);
+        UIManager.showLoading();
 
         try {
             // Initialize simulation if needed
@@ -16,6 +17,7 @@ import { UIManager } from './presentation/UIManager.js';
             
             if (!simulationManager.isInitialized()) {
                 console.error('Simulation not initialized - missing or invalid data');
+                UIManager.hideLoading();
                 return;
             }
 
@@ -31,6 +33,7 @@ import { UIManager } from './presentation/UIManager.js';
 
             // Update current month
             if (!simulationManager.updateCurrentMonth(currentMonthName)) {
+                UIManager.hideLoading();
                 return;
             }
 
@@ -55,6 +58,8 @@ import { UIManager } from './presentation/UIManager.js';
             console.log('Slide update completed successfully');
         } catch (error) {
             console.error('Error in runOnNewSlide:', error);
+        } finally {
+            UIManager.hideLoading();
         }
     }
 
@@ -464,9 +469,33 @@ import { UIManager } from './presentation/UIManager.js';
     window.toeslagen = {
         runOnNewSlide,
         getMonths: () => simulationManager.months,
-        applyIncomes: () => simulationManager.applyIncomes(),
-        applyFixedExpenses: () => simulationManager.applyFixedExpenses(),
-        applyVariableExpense: () => simulationManager.applyVariableExpense()
+        applyIncomes: async () => {
+            await simulationManager.applyIncomes();
+            const currentSaldo = simulationManager.getCurrentSaldo();
+            const previousSaldo = simulationManager.getPreviousSaldo();
+            UIManager.updateProgressBar(simulationManager.currentMonth);
+            UIManager.updateAmount(previousSaldo, currentSaldo);
+            simulationManager.updatePreviousSaldo();
+            return currentSaldo;
+        },
+        applyFixedExpenses: async () => {
+            await simulationManager.applyFixedExpenses();
+            const currentSaldo = simulationManager.getCurrentSaldo();
+            const previousSaldo = simulationManager.getPreviousSaldo();
+            UIManager.updateProgressBar(simulationManager.currentMonth);
+            UIManager.updateAmount(previousSaldo, currentSaldo);
+            simulationManager.updatePreviousSaldo();
+            return currentSaldo;
+        },
+        applyVariableExpense: async () => {
+            await simulationManager.applyVariableExpense();
+            const currentSaldo = simulationManager.getCurrentSaldo();
+            const previousSaldo = simulationManager.getPreviousSaldo();
+            UIManager.updateProgressBar(simulationManager.currentMonth);
+            UIManager.updateAmount(previousSaldo, currentSaldo);
+            simulationManager.updatePreviousSaldo();
+            return currentSaldo;
+        }
     };
 
 })();
