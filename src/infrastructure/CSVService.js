@@ -23,7 +23,7 @@ export class CSVService {
         lines.slice(1).forEach(line => {
             if (!line.trim()) return;
             
-            const fields = line.split(',').map(field => field.trim());
+            const fields = line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(field => field.trim().replace(/["]/g, ''));
             const monthName = fields[0];
             const income = fields[1];
             const incomeAmount = fields[2];

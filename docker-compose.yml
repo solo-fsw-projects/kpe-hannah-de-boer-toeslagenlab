@@ -16,7 +16,7 @@ services:
     extends:
       service: node
     container_name: webserver
-    command: "node --inspect=0.0.0.0:9229 webserver.js"
+    command: "node --inspect=0.0.0.0:9229 webserver.cjs"
     ports:
       - "8080:8080"
 
@@ -33,5 +33,15 @@ services:
       service: node
     container_name: toeslagen-test-watch
     command: sh -c 'npm install && npm run test:watch'
+    volumes:
+      - .:/app
+
+  test-debug:
+    extends:
+      service: node
+    container_name: toeslagen-test-debug
+    command: sh -c 'npm install && npm run test:debug'
+    ports:
+      - "9229:9229"
     volumes:
       - .:/app

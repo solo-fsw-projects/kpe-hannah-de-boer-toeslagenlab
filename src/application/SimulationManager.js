@@ -8,11 +8,9 @@ export class SimulationManager {
         this.months = null;
         this.currentMonth = null;
         this.originalSaldo = 0;
-        this.currentSaldo = 0;
         this.previousSaldo = 0;
         this.toeslagNaam = '';
         this.toeslagPercentage = 0;
-        this.currentVariableExpenseIndex = 0;
     }
 
     async initialize(sheetUrl) {
@@ -27,7 +25,7 @@ export class SimulationManager {
     }
 
     startNewSimulation(startSaldo) {
-        this.originalSaldo = this.previousSaldo = this.currentSaldo = startSaldo;
+        this.originalSaldo = this.previousSaldo = startSaldo;
         this.simulation = new SaldoSimulation(startSaldo);
         console.log('Simulation started with saldo ' + startSaldo);
     }
@@ -78,38 +76,27 @@ export class SimulationManager {
     }
 
     updatePreviousSaldo() {
-        this.previousSaldo = this.currentSaldo;
+        this.previousSaldo = this.getCurrentSaldo();
     }
 
-    async applyIncomes() {
+    applyIncomes() {
         if (!this.currentMonth || !this.simulation) return;
         
-        const incomes = this.currentMonth.getIncomes();
-        const adjustedIncomes = incomes.map(income => ({
-            getAmount: () => income.getName() === this.toeslagNaam ?
-                Math.round(income.getAmount() * this.toeslagPercentage / 100) :
-                income.getAmount()
-        }));
-        this.simulation.applyIncomes(adjustedIncomes);
-        this.currentSaldo = this.simulation.getSaldo();
+        this.simulation.applyIncomes(this.currentMonth.getIncomes());
     }
 
-    async applyFixedExpenses() {
+    applyFixedExpenses() {
         if (!this.currentMonth || !this.simulation) return;
         
         const expenses = this.currentMonth.getFixedExpenses();
         this.simulation.applyFixedExpenses(expenses);
-        this.currentSaldo = this.simulation.getSaldo();
     }
 
-    async applyVariableExpense() {
+    applyVariableExpense(increment) {
         if (!this.currentMonth || !this.simulation) return;
         
-        const expense = this.currentMonth.getNextVariableExpense(true);
+        const expense = this.currentMonth.getNextVariableExpense(increment);
+        if (expense === null) return;
         this.simulation.applyVariableExpense(expense);
-        if (expense) {
-            this.currentVariableExpenseIndex++;
-        }
-        this.currentSaldo = this.simulation.getSaldo();
     }
 }

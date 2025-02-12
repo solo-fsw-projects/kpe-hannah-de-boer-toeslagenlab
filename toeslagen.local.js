@@ -10,7 +10,7 @@ nextButton.addEventListener("click", () =>
 {
     months = window.toeslagen.getMonths();
     if (months === null) {
-        window.toeslagen.runOnNewSlide(sheetUrl, 1, 0);
+        window.toeslagen.runOnNewSlide(sheetUrl, 1, 'oktober 2024', '', 100);
         console.log("first time load months");
         return;
     }
@@ -84,7 +84,7 @@ nextButton.addEventListener("click", () =>
             monthState++;
             break;
         case 3:
-            let variableExpense = window.toeslagen.getNextVariableExpense(false);
+            let variableExpense = window.toeslagen.getNextVariableExpense();
             if (variableExpense === null) {
                 currentMonthIndex++;
                 monthState = 1;

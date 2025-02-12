@@ -36,12 +36,12 @@ export class UIManager {
         if (!amountElement) return;
 
         if (currentAmount === newAmount) {
-            amountElement.textContent = newAmount;
+            amountElement.textContent = String(newAmount);
             return;
         }
 
-        const start = currentAmount;
-        const end = newAmount;
+        const start = parseInt(currentAmount) || 0;
+        const end = parseInt(newAmount) || 0;
         const duration = 1000;
         const startTime = performance.now();
 
@@ -50,7 +50,7 @@ export class UIManager {
             const progress = Math.min(elapsed / duration, 1);
 
             const current = Math.round(start + (end - start) * progress);
-            amountElement.textContent = current;
+            amountElement.textContent = String(current);
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
@@ -66,10 +66,7 @@ export class UIManager {
 
         const variables = {
             'income': () => this.replaceByList(currentMonth.getIncomes(), item => {
-                const amount = item.getName() === toeslagNaam ? 
-                    Math.round(item.getAmount() * toeslagPercentage / 100) : 
-                    item.getAmount();
-                return `${item.getName()} € ${amount}`;
+                return `${item.getName()} € ${item.getAmount()}`;
             }),
             'fixed_expenses': () => this.replaceByList(currentMonth.getFixedExpenses(), 
                 item => `${item.getName()} € ${item.getAmount()}`
