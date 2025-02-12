@@ -4,7 +4,7 @@ export class Month {
         this.incomes = [];
         this.fixedExpenses = [];
         this.variableExpenses = [];
-        this.currentVariableExpense = 0;
+        this.variableExpenseCounter = 0;
     }
 
     addIncome(income) {
@@ -32,12 +32,12 @@ export class Month {
     }
 
     getNextVariableExpense(increment = true) {
-        if (this.currentVariableExpense >= this.variableExpenses.length) {
+        if (this.variableExpenseCounter >= this.variableExpenses.length) {
             return null;
         }
-        const expense = this.variableExpenses[this.currentVariableExpense];
+        const expense = this.variableExpenses[this.variableExpenseCounter];
         if (increment) {
-            this.currentVariableExpense++;
+            this.variableExpenseCounter++;
         }
         return expense;
     }

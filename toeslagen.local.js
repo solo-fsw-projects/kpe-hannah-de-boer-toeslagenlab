@@ -51,7 +51,7 @@ nextButton.addEventListener("click", () =>
             questionText.innerHTML = "Je vaste lasten moet je betalen:<br>{{fixed_expenses}}";
             break;
         case 3:
-            let variableExpense = window.toeslagen.getNextVariableExpense(false);
+            let variableExpense = window.toeslagen.getVariableExpense();
             if (variableExpense === null) {
                 questionText.textContent = "Geen variabele uitgaven meer deze maand.";
             } else {
@@ -84,7 +84,7 @@ nextButton.addEventListener("click", () =>
             monthState++;
             break;
         case 3:
-            let variableExpense = window.toeslagen.getNextVariableExpense();
+            let variableExpense = window.toeslagen.getVariableExpense();
             if (variableExpense === null) {
                 currentMonthIndex++;
                 monthState = 1;

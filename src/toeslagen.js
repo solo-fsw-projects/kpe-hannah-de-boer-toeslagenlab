@@ -68,7 +68,9 @@ import { UIManager } from './presentation/UIManager.js';
 
     window.toeslagen = {
         runOnNewSlide,
-        getMonths: () => simulationManager.months,
+        getMonths: () => {
+            return simulationManager.months
+        },
         applyIncomes: () => {
             simulationManager.applyIncomes();
         },
@@ -76,10 +78,10 @@ import { UIManager } from './presentation/UIManager.js';
             simulationManager.applyFixedExpenses();
         },
         applyVariableExpense: () => {
-            simulationManager.applyVariableExpense(false);
+            simulationManager.applyVariableExpense();
         },
-        getNextVariableExpense: () => {
-            simulationManager.applyVariableExpense(true);
+        getVariableExpense: () => {
+            return simulationManager.getVariableExpense();
         }
     };
 

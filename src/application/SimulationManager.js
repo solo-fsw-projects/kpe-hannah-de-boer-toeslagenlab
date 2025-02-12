@@ -92,11 +92,17 @@ export class SimulationManager {
         this.simulation.applyFixedExpenses(expenses);
     }
 
-    applyVariableExpense(increment) {
+    applyVariableExpense() {
         if (!this.currentMonth || !this.simulation) return;
         
-        const expense = this.currentMonth.getNextVariableExpense(increment);
+        const expense = this.currentMonth.getNextVariableExpense(true);
         if (expense === null) return;
         this.simulation.applyVariableExpense(expense);
+    }
+
+    getVariableExpense() {
+        if (!this.currentMonth || !this.simulation) return;
+        
+        return this.currentMonth.getNextVariableExpense(false);
     }
 }
