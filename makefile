@@ -18,3 +18,9 @@ test-functional:
 
 webserver:
 	docker compose up -d webserver
+
+test-debug:
+	docker compose run --rm test-debug
+
+down:
+	docker compose down

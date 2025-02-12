@@ -14,7 +14,7 @@ describe('Month', () => {
         expect(month.incomes).toEqual([]);
         expect(month.fixedExpenses).toEqual([]);
         expect(month.variableExpenses).toEqual([]);
-        expect(month.currentVariableExpense).toBe(0);
+        expect(month.variableExpenseCounter).toBe(0);
     });
 
     test('should add income correctly', () => {
@@ -46,11 +46,11 @@ describe('Month', () => {
 
         const firstExpense = month.getNextVariableExpense(true);
         expect(firstExpense).toBe(expense1);
-        expect(month.currentVariableExpense).toBe(1);
+        expect(month.variableExpenseCounter).toBe(1);
 
         const secondExpense = month.getNextVariableExpense(true);
         expect(secondExpense).toBe(expense2);
-        expect(month.currentVariableExpense).toBe(2);
+        expect(month.variableExpenseCounter).toBe(2);
 
         const noMoreExpense = month.getNextVariableExpense(true);
         expect(noMoreExpense).toBeNull();
@@ -62,10 +62,10 @@ describe('Month', () => {
 
         const firstLook = month.getNextVariableExpense(false);
         expect(firstLook).toBe(expense);
-        expect(month.currentVariableExpense).toBe(0);
+        expect(month.variableExpenseCounter).toBe(0);
 
         const secondLook = month.getNextVariableExpense(false);
         expect(secondLook).toBe(expense);
-        expect(month.currentVariableExpense).toBe(0);
+        expect(month.variableExpenseCounter).toBe(0);
     });
 });
