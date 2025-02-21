@@ -40,7 +40,7 @@ services:
     extends:
       service: node
     container_name: toeslagen-test-debug
-    command: sh -c 'npm install && npm run test:debug'
+    command: npm run test:debug
     ports:
       - "9229:9229"
     volumes:

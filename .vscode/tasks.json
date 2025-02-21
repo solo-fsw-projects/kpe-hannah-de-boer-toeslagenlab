@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Current Test Debug Container",
+            "type": "docker-compose",
+            "dockerCompose": {
+                "up": {
+                    "detached": true,
+                    "services": ["test-debug"],
+                },
+                "command": "npm run test:debug -- ${relativeFile}"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Debugger listening",
+                    "endsPattern": "Debugger listening"
+                }
+            },
+            "isBackground": true
+        },
+        {
+            "label": "Start Test Debug Container",
+            "type": "docker-compose",
+            "dockerCompose": {
+                "up": {
+                    "detached": true,
+                    "services": ["test-debug"]
+                },
+                "command": "npm run test:debug"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^.*$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Debugger listening",
+                    "endsPattern": "Debugger listening"
+                }
+            },
+            "isBackground": true
+        }
+    ]
+}
