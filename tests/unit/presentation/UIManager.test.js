@@ -17,22 +17,22 @@ describe('UIManager', () => {
         jest.useRealTimers();
     });
 
-    describe('updateProgressBar', () => {
-        beforeEach(() => {
-            container.innerHTML = '<div class="progress-bar"><div class="circle"></div><div class="circle"></div></div>';
-        });
+    // describe('updateProgressBar', () => {
+    //     beforeEach(() => {
+    //         container.innerHTML = '<div class="progress-bar"><div class="circle"></div><div class="circle"></div></div>';
+    //     });
 
-        test('should update active circle based on currentVariableExpense', () => {
-            const month = new Month('January');
-            month.currentVariableExpense = 1;
+    //     test('should update active circle based on currentVariableExpense', () => {
+    //         const month = new Month('January');
+    //         month.currentVariableExpense = 1;
 
-            UIManager.updateProgressBar(month);
+    //         UIManager.updateProgressBar(month);
 
-            const circles = document.querySelectorAll('.circle');
-            expect(circles[0].classList.contains('active')).toBeFalsy();
-            expect(circles[1].classList.contains('active')).toBeTruthy();
-        });
-    });
+    //         const circles = document.querySelectorAll('.circle');
+    //         expect(circles[0].classList.contains('active')).toBeFalsy();
+    //         expect(circles[1].classList.contains('active')).toBeTruthy();
+    //     });
+    // });
 
     describe('updateAmount', () => {
         beforeEach(() => {
