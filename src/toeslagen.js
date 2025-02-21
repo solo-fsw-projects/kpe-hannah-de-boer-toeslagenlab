@@ -54,7 +54,7 @@ import { UIManager } from './presentation/UIManager.js';
                 simulationManager.toeslagPercentage
             );
 
-            UIManager.updateProgressBar(simulationManager.currentMonth);
+            UIManager.updateProgressBar(simulationManager.months, simulationManager.currentMonth);
             UIManager.updateAmount(previousSaldo, currentSaldo);
 
             simulationManager.updatePreviousSaldo();

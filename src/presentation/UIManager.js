@@ -13,22 +13,27 @@ export class UIManager {
         }
     }
 
-    static updateProgressBar(month) {
-        if (!month) return;
+    static updateProgressBar(months, currentMonth) {
+        if (!currentMonth || !months?.length || !Array.isArray(months) || !months.includes(currentMonth)) {
+            console.error('UIManager.updateProgressBar: invalid parameters', { currentMonth, months });
+            return;
+        }
 
         // Update month name
         const monthName = document.querySelector('.month-name');
-        if (monthName) {
-            monthName.textContent = month.name;
+        const circleContainer = document.querySelector(".circle-container");
+        if (!monthName || !circleContainer) {
+            console.error('UIManager.updateProgressBar: .month-name or .circle-container not found in DOM');
+            return;
         }
 
-        const circles = document.querySelectorAll('.circle');
-        circles.forEach((circle, index) => {
-            circle.classList.remove('active');
-            if (index === month.currentVariableExpense) {
-                circle.classList.add('active');
-            }
-        });
+        if (monthName) {
+            monthName.textContent = currentMonth.name;
+        }
+
+        const percentage = (months.indexOf(currentMonth) / (months.length - 1)) * 65;
+
+        circleContainer.style.left = `calc(${percentage}% - 18px)`;
     }
 
     static updateAmount(currentAmount, newAmount) {
