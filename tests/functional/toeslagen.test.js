@@ -3,13 +3,25 @@
  */
 import { jest } from '@jest/globals';
 import mockFetch from '../mocks/fetch.js';
-import '@/toeslagen.js';
+// Dynamic import for toeslagen module to allow reloading
+let toeslag;
+
 import fs from 'fs';
 
 describe('Toeslagen Module Tests', () => {
     let sheetCsv;
     
-    beforeEach(() => {
+    beforeEach(async () => {
+        // Delete the existing toeslagen object
+        delete window.toeslagen;
+        
+        // Reload toeslagen module
+        jest.resetModules();
+        toeslag = await import('@/toeslagen.js');
+        
+        // // Wait for toeslagen to be available
+        // await waitForToeslagen();
+
         // Reset DOM
         document.body.innerHTML = `
             <div class="QuestionText">
@@ -39,42 +51,54 @@ describe('Toeslagen Module Tests', () => {
 
     describe('End-to-End Flow', () => {
         test('completes full simulation flow', async () => {
+
             // Initial load
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+
             expect(document.querySelector('.month-name').textContent.trim()).toBe('oktober 2024');
             expect(document.querySelector('.amount').textContent).toBe('1000');
 
             // Apply incomes and check UI update
             window.toeslagen.applyIncomes();
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             expect(document.querySelector('.amount').textContent).toBe('3649'); // 1000 + 2289 + 360
 
             // Apply fixed expenses and check UI update
             window.toeslagen.applyFixedExpenses();
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             expect(document.querySelector('.amount').textContent).toBe('2095'); // 3649 - (628 + 233 + 244 + 141 + 308)
 
             // Apply variable expense and check UI update
             window.toeslagen.applyVariableExpense();
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             expect(document.querySelector('.amount').textContent).toBe('1606'); // 2095 - 489
         });
     });
 
     describe('Navigation and State', () => {
         test('maintains state when navigating between months', async () => {
+            
             // Start in October
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+
+            // Apply incomes and check UI update
+            window.toeslagen.applyIncomes();
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
             await new Promise(resolve => setTimeout(resolve, 1000));
             expect(document.querySelector('.amount').textContent).toBe('3649'); // 1000 + 2289 + 360
 
-            // Move to November
+            // Move to November and apply incomes and check UI update
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'november 2024', '', 100);
+            window.toeslagen.applyIncomes();
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'november 2024', '', 100);
             await new Promise(resolve => setTimeout(resolve, 1000));
-            expect(document.querySelector('.amount').textContent).toBe('3649'); // 1000 + 2289 + 360
+            expect(document.querySelector('.amount').textContent).toBe('5787'); // 3649 + 1778 + 360 = 5787
             expect(document.querySelector('.month-name').textContent.trim()).toBe('november 2024');
         });
     });
@@ -111,6 +135,8 @@ describe('Toeslagen Module Tests', () => {
 
         test('updates question text with real-world data format', async () => {
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+
             // Wait for template update and data load
             await new Promise(resolve => setTimeout(resolve, 500));
             const questionText = document.querySelector('.QuestionText').innerHTML;
@@ -127,6 +153,8 @@ describe('Toeslagen Module Tests', () => {
     describe('Toeslag Calculation', () => {
         test('applies toeslag percentage with proper rounding', async () => {
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', 'Huurtoeslag', 80);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', 'Huurtoeslag', 80);
+
             // Wait for template update and data load
             await new Promise(resolve => setTimeout(resolve, 500));
             const questionText = document.querySelector('.QuestionText').innerHTML;
