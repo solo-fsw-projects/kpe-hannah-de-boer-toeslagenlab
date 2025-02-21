@@ -103,6 +103,26 @@ describe('Toeslagen Module Tests', () => {
         });
     });
 
+    describe('Progress Bar', () => {
+        // Position is from 0 to 65% for 12 months in sheets1.csv
+        test('positions circle correctly for different months', async () => {
+            const getPosition = () => document.querySelector('.circle-container').style.left;
+            
+            // Init
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+
+            // Initialize and test key positions
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100); // 1 of 12
+            expect(getPosition()).toBe('calc(0\% - 18px)');
+
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'april 2025', '', 100); // 7 of 12
+            expect(getPosition()).toMatch(/calc\(35\.\d+\% - 18px\)/);
+
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'maart 2026', '', 100); // 12 of 12
+            expect(getPosition()).toMatch(/calc\(65\% - 18px\)/);
+        });
+    });
+
     describe('UI Updates', () => {
         beforeEach(() => {
             // Reset loading state
