@@ -50,6 +50,27 @@ describe('Toeslagen Module Tests', () => {
     });
 
     describe('End-to-End Flow', () => {
+        test('applies custom expense correctly', async () => {
+            // Initial load
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+
+            expect(document.querySelector('.amount').textContent).toBe('1000');
+
+            // Apply custom expense and check UI update
+            window.toeslagen.applyCustomExpense(250);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            expect(document.querySelector('.amount').textContent).toBe('750'); // 1000 - 250
+
+            // Apply another custom expense
+            window.toeslagen.applyCustomExpense(300);
+            await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            expect(document.querySelector('.amount').textContent).toBe('450'); // 750 - 300
+        });
+
+
         test('completes full simulation flow', async () => {
 
             // Initial load
