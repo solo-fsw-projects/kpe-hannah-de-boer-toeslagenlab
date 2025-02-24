@@ -31,8 +31,6 @@ export class SimulationManager {
     }
 
     updateToeslagSettings(naam, percentage) {
-        if (naam === this.toeslagNaam) return;
-        
         this.toeslagNaam = naam;
         this.toeslagPercentage = percentage;
         this.applyToeslagPercentageToIncomes();
