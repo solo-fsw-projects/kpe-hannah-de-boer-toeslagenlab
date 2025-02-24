@@ -80,6 +80,9 @@ import { UIManager } from './presentation/UIManager.js';
         applyVariableExpense: () => {
             simulationManager.applyVariableExpense();
         },
+        applyCustomExpense: (amount) => {
+            simulationManager.applyCustomExpense(amount);
+        },
         getVariableExpense: () => {
             return simulationManager.getVariableExpense();
         }

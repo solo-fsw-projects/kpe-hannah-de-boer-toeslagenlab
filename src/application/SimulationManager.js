@@ -100,6 +100,11 @@ export class SimulationManager {
         this.simulation.applyVariableExpense(expense);
     }
 
+    applyCustomExpense(amount) {
+        if (!this.simulation) return;
+        this.simulation.applyCustomExpense(amount);
+    }
+
     getVariableExpense() {
         if (!this.currentMonth || !this.simulation) return;
         

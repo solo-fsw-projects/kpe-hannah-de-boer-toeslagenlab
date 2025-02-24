@@ -55,4 +55,30 @@ describe('SaldoSimulation', () => {
 
         expect(simulation.getSaldo()).toBe(1900); // 1000 + 2000 - 800 - 300
     });
+
+    describe('applyCustomExpense', () => {
+        test('should subtract valid positive amount from saldo', () => {
+            const simulation = new SaldoSimulation(1000);
+            simulation.applyCustomExpense(500);
+            expect(simulation.getSaldo()).toBe(500);
+        });
+
+        test('should not modify saldo for negative amount', () => {
+            const simulation = new SaldoSimulation(1000);
+            simulation.applyCustomExpense(-500);
+            expect(simulation.getSaldo()).toBe(1000);
+        });
+
+        test('should not modify saldo for zero amount', () => {
+            const simulation = new SaldoSimulation(1000);
+            simulation.applyCustomExpense(0);
+            expect(simulation.getSaldo()).toBe(1000);
+        });
+
+        test('should not modify saldo for non-numeric input', () => {
+            const simulation = new SaldoSimulation(1000);
+            simulation.applyCustomExpense('500');
+            expect(simulation.getSaldo()).toBe(1000);
+        });
+    });
 });

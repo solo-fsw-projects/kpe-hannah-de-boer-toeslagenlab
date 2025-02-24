@@ -35,6 +35,12 @@ Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
 		window.toeslagen.applyVariableExpense();
 	}
 });
+- Er is een optie om een aangepast bedrag toe te passen. Dit wordt gebruikt om de terugvordering te doen.
+Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
+	if (type === "next") {
+		window.toeslagen.applyCustomExpense();
+	}
+});
 
 
 ## Notes

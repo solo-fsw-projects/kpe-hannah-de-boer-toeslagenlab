@@ -24,4 +24,10 @@ export class SaldoSimulation {
     getSaldo() {
         return this.saldo;
     }
+
+    applyCustomExpense(amount) {
+        if (typeof amount === 'number' && amount > 0) {
+            this.saldo -= amount;
+        }
+    }
 }

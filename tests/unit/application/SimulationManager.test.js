@@ -100,6 +100,19 @@ describe('SimulationManager', () => {
         expect(manager.currentMonth).toBeUndefined();
     });
 
+    describe('applyCustomExpense', () => {
+        test('should not apply custom expense when simulation is not initialized', () => {
+            manager.applyCustomExpense(500);
+            expect(manager.getCurrentSaldo()).toBe(0);
+        });
+
+        test('should apply custom expense when simulation is initialized', () => {
+            manager.startNewSimulation(1000);
+            manager.applyCustomExpense(500);
+            expect(manager.getCurrentSaldo()).toBe(500);
+        });
+    });
+
     test('should get and update saldo values correctly', () => {
         manager.startNewSimulation(1000);
         
