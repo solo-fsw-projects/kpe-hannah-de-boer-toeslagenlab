@@ -15,6 +15,7 @@ import { UIManager } from './presentation/UIManager.js';
 
             if (!simulationManager.isInitialized()) {
                 // Initialize simulation if needed
+                if (!sheetUrl) return;
                 await simulationManager.initialize(sheetUrl);
                 if (!simulationManager.isInitialized()) {
                     console.error('Simulation not initialized - missing or invalid data');
