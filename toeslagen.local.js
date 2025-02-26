@@ -49,6 +49,9 @@ nextButton.addEventListener("click", () =>
             break;
         case 2:
             questionText.innerHTML = "Je vaste lasten moet je betalen:<br>{{fixed_expenses}}";
+            if (currentMonthIndex === 2) {
+                questionText.innerHTML += "<br>Extra last: 666";
+            }
             break;
         case 3:
             let variableExpense = window.toeslagen.getVariableExpense();
@@ -74,6 +77,10 @@ nextButton.addEventListener("click", () =>
 
     window.toeslagen.runOnNewSlide(sheetUrl, 1, startSaldo, month.name, 'Huurtoeslag', 10);
 
+    if (currentMonthIndex === 2) {
+        window.toeslagen.applyCustomExpense(666);
+    }
+    
     switch (monthState) {
         case 1:
             window.toeslagen.applyIncomes();
