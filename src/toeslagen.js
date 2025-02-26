@@ -1,4 +1,3 @@
-
 import { SimulationManager } from './application/SimulationManager.js';
 import { UIManager } from './presentation/UIManager.js';
 
@@ -8,10 +7,16 @@ import { UIManager } from './presentation/UIManager.js';
     const simulationManager = new SimulationManager();
 
     async function runOnNewSlide(sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
-        UIManager.togglePreviousButton(enablePreviousButton);
-        UIManager.showLoading();
-
         try {
+            // Parse input parameters
+            const parsedEnablePrevious = Boolean(enablePreviousButton);
+            const parsedStartSaldo = Number(startSaldo) || 0;
+            const parsedMonthName = String(currentMonthName || '');
+            const parsedToeslagNaam = String(currentToeslagNaam || '');
+            const parsedToeslagPercentage = Number(currentToeslagPercentage) || 0;
+
+            UIManager.togglePreviousButton(parsedEnablePrevious);
+            UIManager.showLoading();
 
             if (!simulationManager.isInitialized()) {
                 // Initialize simulation if needed
@@ -25,17 +30,17 @@ import { UIManager } from './presentation/UIManager.js';
             }
 
             // Start or update simulation
-            if (startSaldo > 0 && simulationManager.originalSaldo !== startSaldo) {
-                simulationManager.startNewSimulation(startSaldo);
+            if (parsedStartSaldo > 0 && simulationManager.originalSaldo !== parsedStartSaldo) {
+                simulationManager.startNewSimulation(parsedStartSaldo);
             }
 
             // Update toeslag settings if changed
-            if (currentToeslagNaam) {
-                simulationManager.updateToeslagSettings(currentToeslagNaam, currentToeslagPercentage);
+            if (parsedToeslagNaam) {
+                simulationManager.updateToeslagSettings(parsedToeslagNaam, parsedToeslagPercentage);
             }
 
             // Update current month
-            if (!simulationManager.updateCurrentMonth(currentMonthName)) {
+            if (!simulationManager.updateCurrentMonth(parsedMonthName)) {
                 UIManager.hideLoading();
                 return;
             }
@@ -62,7 +67,6 @@ import { UIManager } from './presentation/UIManager.js';
             console.log('Slide update completed successfully');
         } catch (error) {
             console.error('Error in runOnNewSlide:', error);
-        } finally {
             UIManager.hideLoading();
         }
     }
@@ -82,7 +86,8 @@ import { UIManager } from './presentation/UIManager.js';
             simulationManager.applyVariableExpense();
         },
         applyCustomExpense: (amount) => {
-            simulationManager.applyCustomExpense(amount);
+            const parsedAmount = Number(amount) || 0;
+            simulationManager.applyCustomExpense(parsedAmount);
         },
         getVariableExpense: () => {
             return simulationManager.getVariableExpense();
