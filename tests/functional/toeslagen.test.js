@@ -8,6 +8,9 @@ let toeslag;
 
 import fs from 'fs';
 
+/**
+ * The only thing that is running async when calling runOnNewSlide is the saldo amount change animation
+ */
 describe('Toeslagen Module Tests', () => {
     let sheetCsv;
     
