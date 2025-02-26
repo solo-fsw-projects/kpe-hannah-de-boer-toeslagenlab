@@ -22,10 +22,12 @@ describe('SimulationManager', () => {
                 name: 'oktober 2024',
                 getIncomes: () => [{
                     getName: () => 'Salaris',
-                    setPercentage: jest.fn()
+                    setPercentage: jest.fn(),
+                    getPercentage: () => 0
                 }, {
                     getName: () => 'Huurtoeslag',
-                    setPercentage: jest.fn()
+                    setPercentage: jest.fn(),
+                    getPercentage: () => 0
                 }],
                 getFixedExpenses: () => [
                     { getName: () => 'Huur', getAmount: () => 628 },

@@ -32,6 +32,7 @@ import { UIManager } from './presentation/UIManager.js';
             // Start or update simulation
             if (parsedStartSaldo > 0 && simulationManager.originalSaldo !== parsedStartSaldo) {
                 simulationManager.startNewSimulation(parsedStartSaldo);
+                console.log('Simulation started with saldo ' + parsedStartSaldo);
             }
 
             // Update toeslag settings if changed
@@ -78,16 +79,20 @@ import { UIManager } from './presentation/UIManager.js';
         },
         applyIncomes: () => {
             simulationManager.applyIncomes();
+            console.log('Incomes (' + simulationManager.currentMonth.name + ') applied');
         },
         applyFixedExpenses: () => {
             simulationManager.applyFixedExpenses();
+            console.log('Fixed expenses (' + simulationManager.currentMonth.name + ') applied');
         },
         applyVariableExpense: () => {
             simulationManager.applyVariableExpense();
+            console.log('Variable expense (' + simulationManager.currentMonth.name + ') applied');
         },
         applyCustomExpense: (amount) => {
             const parsedAmount = Number(amount) || 0;
             simulationManager.applyCustomExpense(parsedAmount);
+            console.log('Custom expense of ' + parsedAmount + ' applied');
         },
         getVariableExpense: () => {
             return simulationManager.getVariableExpense();

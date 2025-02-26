@@ -17,6 +17,10 @@ export class Income {
         return this.name;
     }
 
+    getPercentage() {
+        return this.percentage;
+    }
+
     setPercentage(percentage) {
         this.percentage = percentage;
     }

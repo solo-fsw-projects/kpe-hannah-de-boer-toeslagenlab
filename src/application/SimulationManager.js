@@ -30,7 +30,6 @@ export class SimulationManager {
         }
         this.originalSaldo = this.previousSaldo = startSaldo;
         this.simulation = new SaldoSimulation(startSaldo);
-        console.log('Simulation started with saldo ' + startSaldo);
     }
 
     updateToeslagSettings(naam, percentage) {
@@ -49,9 +48,13 @@ export class SimulationManager {
         if (!this.toeslagNaam) return;
 
         let applied = false;
+        let foundToeslagNaam = false;
+
         this.months.forEach(month => 
             month.getIncomes().forEach(income => {
                 if (income.getName() === this.toeslagNaam) {
+                    foundToeslagNaam = true;
+                    if (income.getPercentage() === this.toeslagPercentage) return;
                     income.setPercentage(this.toeslagPercentage);
                     applied = true;
                 }
@@ -60,7 +63,9 @@ export class SimulationManager {
 
         if (applied) {
             console.log(`Applied ${this.toeslagPercentage}% to ${this.toeslagNaam}`);
-        } else {
+        }
+        
+        if (!foundToeslagNaam) {
             console.error(`Could not find toeslag_naam '${this.toeslagNaam}' in sheet data`);
         }
     }
@@ -69,10 +74,14 @@ export class SimulationManager {
         if (typeof monthName !== 'string') {
             throw new Error('monthName must be a string');
         }
-        this.currentMonth = this.months.find(month => month.name === monthName);
-        if (!this.currentMonth) {
+        let foundMonth = this.months.find(month => month.name === monthName);
+        if (!foundMonth) {
             console.error(`Cannot find ${monthName} in months data`);
+            this.currentMonth = undefined;
             return false;
+        }
+        if (foundMonth.name !== this.currentMonth?.name) {
+            this.currentMonth = foundMonth;
         }
         return true;
     }

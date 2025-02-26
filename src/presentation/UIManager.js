@@ -95,8 +95,10 @@ export class UIManager {
             const placeholder = `{{${key}}}`;
             content = content.replace(placeholder, getter());
         });
-
-        questionText.innerHTML = content;
+        if (content !== questionText.innerHTML) {
+            questionText.innerHTML = content;
+            console.log('Variables were replaced in question text.');
+        }
     }
 
     static replaceByList(items, formatter) {
