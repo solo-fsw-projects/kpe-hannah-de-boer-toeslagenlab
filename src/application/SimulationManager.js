@@ -25,12 +25,21 @@ export class SimulationManager {
     }
 
     startNewSimulation(startSaldo) {
+        if (typeof startSaldo !== 'number') {
+            throw new Error('startSaldo must be a number');
+        }
         this.originalSaldo = this.previousSaldo = startSaldo;
         this.simulation = new SaldoSimulation(startSaldo);
         console.log('Simulation started with saldo ' + startSaldo);
     }
 
     updateToeslagSettings(naam, percentage) {
+        if (typeof naam !== 'string') {
+            throw new Error('naam must be a string');
+        }
+        if (typeof percentage !== 'number') {
+            throw new Error('percentage must be a number');
+        }
         this.toeslagNaam = naam;
         this.toeslagPercentage = percentage;
         this.applyToeslagPercentageToIncomes();
@@ -57,6 +66,9 @@ export class SimulationManager {
     }
 
     updateCurrentMonth(monthName) {
+        if (typeof monthName !== 'string') {
+            throw new Error('monthName must be a string');
+        }
         this.currentMonth = this.months.find(month => month.name === monthName);
         if (!this.currentMonth) {
             console.error(`Cannot find ${monthName} in months data`);
@@ -99,6 +111,9 @@ export class SimulationManager {
     }
 
     applyCustomExpense(amount) {
+        if (typeof amount !== 'number') {
+            throw new Error('amount must be a number');
+        }
         if (!this.simulation) return;
         this.simulation.applyCustomExpense(amount);
     }

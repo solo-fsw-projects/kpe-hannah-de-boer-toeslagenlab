@@ -72,6 +72,12 @@ describe('SimulationManager', () => {
         expect(manager.simulation).toBeDefined();
     });
 
+    test('should throw error when starting simulation with non-number saldo', () => {
+        expect(() => manager.startNewSimulation('1000')).toThrow('startSaldo must be a number');
+        expect(() => manager.startNewSimulation(undefined)).toThrow('startSaldo must be a number');
+        expect(() => manager.startNewSimulation(null)).toThrow('startSaldo must be a number');
+    });
+
     test('should update toeslag settings', async () => {
         await manager.initialize('http://example.com/data.csv');
         
@@ -79,6 +85,14 @@ describe('SimulationManager', () => {
         
         expect(manager.toeslagNaam).toBe('Huurtoeslag');
         expect(manager.toeslagPercentage).toBe(50);
+    });
+
+    test('should throw error when updating toeslag settings with invalid types', async () => {
+        await manager.initialize('http://example.com/data.csv');
+        
+        expect(() => manager.updateToeslagSettings(123, 50)).toThrow('naam must be a string');
+        expect(() => manager.updateToeslagSettings('Huurtoeslag', '50')).toThrow('percentage must be a number');
+        expect(() => manager.updateToeslagSettings(null, null)).toThrow('naam must be a string');
     });
 
     test('should update current month', async () => {
@@ -98,6 +112,22 @@ describe('SimulationManager', () => {
         
         expect(result).toBeFalsy();
         expect(manager.currentMonth).toBeUndefined();
+    });
+
+    test('should throw error when updating current month with non-string name', async () => {
+        await manager.initialize('http://example.com/data.csv');
+        
+        expect(() => manager.updateCurrentMonth(123)).toThrow('monthName must be a string');
+        expect(() => manager.updateCurrentMonth(undefined)).toThrow('monthName must be a string');
+        expect(() => manager.updateCurrentMonth(null)).toThrow('monthName must be a string');
+    });
+
+    test('should throw error when applying custom expense with non-number amount', () => {
+        manager.startNewSimulation(1000);
+        
+        expect(() => manager.applyCustomExpense('100')).toThrow('amount must be a number');
+        expect(() => manager.applyCustomExpense(undefined)).toThrow('amount must be a number');
+        expect(() => manager.applyCustomExpense(null)).toThrow('amount must be a number');
     });
 
     describe('applyCustomExpense', () => {
