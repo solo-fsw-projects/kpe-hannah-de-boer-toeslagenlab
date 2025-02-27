@@ -82,6 +82,7 @@ export class SimulationManager {
         }
         if (foundMonth.name !== this.currentMonth?.name) {
             this.currentMonth = foundMonth;
+            console.log(`Month changed to ${foundMonth.name}`);
         }
         return true;
     }
