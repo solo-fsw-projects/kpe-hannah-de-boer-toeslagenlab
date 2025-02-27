@@ -46,14 +46,14 @@ import { UIManager } from './presentation/UIManager.js';
                 return;
             }
 
-            const currentSaldo = simulationManager.getCurrentSaldo();
-            const previousSaldo = simulationManager.getPreviousSaldo();
+            simulationManager.progressOneSlide();
 
             // Update UI
-            if (currentSaldo !== previousSaldo) {
-                console.log('Saldo change from ' + previousSaldo + ' to ' + currentSaldo)
-                UIManager.togglePreviousButton(false);
+            if (simulationManager.previousSlideChangesSaldo()) {
+                console.log('Saldo change from ' + simulationManager.getPreviousSaldo() + ' to ' + simulationManager.getCurrentSaldo());
             }
+            UIManager.togglePreviousButton(!simulationManager.previousSlideChangesSaldo() && parsedEnablePrevious);
+        
 
             UIManager.replaceQuestionTextVariables(
                 simulationManager.currentMonth,
@@ -62,7 +62,7 @@ import { UIManager } from './presentation/UIManager.js';
             );
 
             UIManager.updateProgressBar(simulationManager.months, simulationManager.currentMonth);
-            UIManager.updateAmount(previousSaldo, currentSaldo);
+            UIManager.updateAmount(simulationManager.getPreviousSaldo(), simulationManager.getCurrentSaldo());
 
             simulationManager.updatePreviousSaldo();
             console.log('Slide update completed successfully');
@@ -96,6 +96,9 @@ import { UIManager } from './presentation/UIManager.js';
         },
         getVariableExpense: () => {
             return simulationManager.getVariableExpense();
+        },
+        runOnPreviousButton: () => {
+            simulationManager.previousSlide();
         }
     };
 

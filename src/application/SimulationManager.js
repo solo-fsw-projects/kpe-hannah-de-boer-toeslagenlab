@@ -11,6 +11,8 @@ export class SimulationManager {
         this.previousSaldo = 0;
         this.toeslagNaam = '';
         this.toeslagPercentage = 0;
+        this.slideNumber = 0;
+        this.slidesChangedStack = []; // Stack to track slide sequence
     }
 
     async initialize(sheetUrl) {
@@ -30,6 +32,27 @@ export class SimulationManager {
         }
         this.originalSaldo = this.previousSaldo = startSaldo;
         this.simulation = new SaldoSimulation(startSaldo);
+        this.slideNumber = 0;
+        this.slidesChangedStack = [];
+    }
+
+    progressOneSlide() {
+        this.slideNumber++;
+        if (this.slidesChangedStack[this.slideNumber] === undefined) {
+            this.slidesChangedStack[this.slideNumber] = false;
+        }
+    }
+
+    previousSlide() {
+        // because slideNumber will first be increased by one before checking the state, we need to subtract 2 to go back to the previous slide
+        this.slideNumber = this.slideNumber - 2;
+        if (this.slideNumber < 0) {
+            this.slideNumber = 0;
+        }
+    }
+
+    markSlideAsChanged() {
+        this.slidesChangedStack[this.slideNumber] = true;
     }
 
     updateToeslagSettings(naam, percentage) {
@@ -90,18 +113,30 @@ export class SimulationManager {
         return this.simulation?.getSaldo() ?? 0;
     }
 
+    previousSlideChangesSaldo() {
+        // If we're not tracking any slides yet, allow previous
+        if (this.slidesChangedStack.length === 0) return false;
+
+        // If we're on the first slide, allow previous
+        if (this.slideNumber < 2) return false;
+
+        return this.slidesChangedStack[this.slideNumber - 1];
+    }
+
     getPreviousSaldo() {
         return this.previousSaldo;
     }
 
     updatePreviousSaldo() {
-        this.previousSaldo = this.getCurrentSaldo();
+        const currentSaldo = this.getCurrentSaldo();
+        this.previousSaldo = currentSaldo;
     }
 
     applyIncomes() {
         if (!this.currentMonth || !this.simulation) return;
         
         this.simulation.applyIncomes(this.currentMonth.getIncomes());
+        this.markSlideAsChanged();
     }
 
     applyFixedExpenses() {
@@ -109,6 +144,7 @@ export class SimulationManager {
         
         const expenses = this.currentMonth.getFixedExpenses();
         this.simulation.applyFixedExpenses(expenses);
+        this.markSlideAsChanged();
     }
 
     applyVariableExpense() {
@@ -117,6 +153,7 @@ export class SimulationManager {
         const expense = this.currentMonth.getNextVariableExpense(true);
         if (expense === null) return;
         this.simulation.applyVariableExpense(expense);
+        this.markSlideAsChanged();
     }
 
     applyCustomExpense(amount) {
@@ -125,6 +162,7 @@ export class SimulationManager {
         }
         if (!this.simulation) return;
         this.simulation.applyCustomExpense(amount);
+        this.markSlideAsChanged();
     }
 
     getVariableExpense() {
