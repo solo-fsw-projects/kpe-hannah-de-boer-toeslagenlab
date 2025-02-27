@@ -98,6 +98,7 @@ import { UIManager } from './presentation/UIManager.js';
             return simulationManager.getVariableExpense();
         },
         runOnPreviousButton: () => {
+            console.log('Previous button clicked');
             simulationManager.previousSlide();
         }
     };
