@@ -74,6 +74,8 @@ export class SimulationManager {
         if (typeof monthName !== 'string') {
             throw new Error('monthName must be a string');
         }
+        if (!monthName) return;
+
         let foundMonth = this.months.find(month => month.name === monthName);
         if (!foundMonth) {
             console.error(`Cannot find ${monthName} in months data`);
