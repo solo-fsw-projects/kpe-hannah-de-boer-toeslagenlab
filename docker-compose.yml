@@ -1,0 +1,47 @@
+services:
+  node:
+    image: node:20
+    container_name: toeslagen
+    hostname: toeslagen
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./.bash_history:/.bash_history
+    ports:
+      - "9229:9229"
+      - "3000:3000"
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+
+  webserver:
+    extends:
+      service: node
+    container_name: webserver
+    command: "node --inspect=0.0.0.0:9229 webserver.cjs"
+    ports:
+      - "8080:8080"
+
+  test:
+    extends:
+      service: node
+    container_name: toeslagen-test
+    command: sh -c 'npm install && npm test'
+    volumes:
+      - .:/app
+
+  test-watch:
+    extends:
+      service: node
+    container_name: toeslagen-test-watch
+    command: sh -c 'npm install && npm run test:watch'
+    volumes:
+      - .:/app
+
+  test-debug:
+    extends:
+      service: node
+    container_name: toeslagen-test-debug
+    command: npm run test:debug
+    ports:
+      - "9229:9229"
+    volumes:
+      - .:/app
