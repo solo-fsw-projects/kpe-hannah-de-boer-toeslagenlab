@@ -10,7 +10,7 @@ nextButton.addEventListener("click", () =>
 {
     months = window.toeslagen.getMonths();
     if (months === null) {
-        window.toeslagen.runOnNewSlide(sheetUrl, 1, 0, 'oktober 2024', '', 100);
+        window.toeslagen.runOnNewSlide(sheetUrl, 0, 0, 'oktober 2024', '', 100);
         console.log("first time load months");
         return;
     }
@@ -75,7 +75,7 @@ nextButton.addEventListener("click", () =>
         toeslagPercentage = 10;
     }
 
-    window.toeslagen.runOnNewSlide(sheetUrl, 1, startSaldo, month.name, 'Huurtoeslag', 10);
+    window.toeslagen.runOnNewSlide(sheetUrl, 0, startSaldo, month.name, 'Huurtoeslag', 10);
 
     if (currentMonthIndex === 2) {
         window.toeslagen.applyCustomExpense(666);

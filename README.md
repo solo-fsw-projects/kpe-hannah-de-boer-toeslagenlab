@@ -7,9 +7,7 @@
 ## Deploy en versies
 De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv filezilla. Map toeslagen.
 
-Versies gaan met een submap daar in. Ondertussen zitten we op v2. Dat is om tussen onderzoeken geen problemen te krijgen.
-
-Om dit lokaal ook expliciet te maken heb ik een build map gemaakt. Dus build/v2/ en daarbinnen een softlink naar toeslagen.js.
+Versies gaan met een submap daar in. Zie de VERSION bestand in de root. Dat is om tussen onderzoeken geen problemen te krijgen.
 
 ## Instructie voor onderzoekers
 Zie https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/
