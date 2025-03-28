@@ -63,16 +63,10 @@ describe('SaldoSimulation', () => {
             expect(simulation.getSaldo()).toBe(500);
         });
 
-        test('should not modify saldo for negative amount', () => {
+        test('should add valid negative amount to saldo', () => {
             const simulation = new SaldoSimulation(1000);
             simulation.applyCustomExpense(-500);
-            expect(simulation.getSaldo()).toBe(1000);
-        });
-
-        test('should not modify saldo for zero amount', () => {
-            const simulation = new SaldoSimulation(1000);
-            simulation.applyCustomExpense(0);
-            expect(simulation.getSaldo()).toBe(1000);
+            expect(simulation.getSaldo()).toBe(1500);
         });
 
         test('should not modify saldo for non-numeric input', () => {
