@@ -9,7 +9,7 @@ import { UIManager } from './presentation/UIManager.js';
     async function runOnNewSlide(sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
         try {
             // Parse input parameters
-            const parsedEnablePrevious = Boolean(enablePreviousButton);
+            const parsedEnablePrevious = enablePreviousButton === '1';
             const parsedStartSaldo = Number(startSaldo) || 0;
             const parsedMonthName = String(currentMonthName || '');
             const parsedToeslagNaam = String(currentToeslagNaam || '');
