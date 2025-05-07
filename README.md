@@ -7,6 +7,7 @@ bla
 - run `make console`
 - run `make test`
 
+bla2
 ## Deploy en versies
 De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv ssh ftp (bijvoorbeeld met FileZilla). Map toeslagen.
 
