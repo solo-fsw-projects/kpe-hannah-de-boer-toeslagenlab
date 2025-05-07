@@ -6,7 +6,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-      - ./.bash_history:/.bash_history
+      - ./.bash_history:/home/node/.bash_history
     ports:
       - "9229:9229"
       - "3000:3000"

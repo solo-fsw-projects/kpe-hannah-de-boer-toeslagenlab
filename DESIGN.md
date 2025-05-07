@@ -19,12 +19,14 @@ The Toeslagen application is a web-based simulation tool designed to help users 
      - Handles initialization from CSV data
      - Processes financial transactions (incomes, expenses)
      - Manages toeslag (benefit) settings and percentages
+     - Tracks slide history with slide change stack
+     - Provides navigation controls (previous/next slide)
 
 3. **Domain Layer**
    - **SaldoSimulation**: Core business logic for financial calculations
    - **Models**:
      - `Month`: Represents a financial month
-     - `Income`: Income transaction model
+     - `Income`: Income transaction model with percentage adjustment capability
      - `Expense`: Expense transaction model
 
 4. **Infrastructure Layer**
@@ -36,8 +38,9 @@ The Toeslagen application is a web-based simulation tool designed to help users 
    - **UIManager**: Handles all UI-related operations
      - Updates progress bars
      - Manages loading states
-     - Updates financial amounts display
-     - Handles question text variables
+     - Updates financial amounts display with animations
+     - Handles question text variables with dynamic content replacement
+     - Controls navigation button visibility
 
 ## Integration
 
@@ -52,12 +55,16 @@ Each block includes specific JavaScript hooks for data synchronization:
 - `applyFixedExpenses()`
 - `applyVariableExpense()`
 - `applyCustomExpense()`
+- `getVariableExpense()` - For retrieving expense information without applying it
+- `getMonths()` - For accessing month data
+- `runOnPreviousButton()` - For handling backward navigation
 
 ### Data Flow
 1. CSV data is loaded containing financial scenarios
 2. User progresses through Qualtrics survey
 3. Each page transition triggers relevant simulation updates
 4. UI reflects current financial state and progress
+5. Navigation controls allow forward and backward movement through the simulation
 
 ## Technical Implementation
 
@@ -68,21 +75,29 @@ Each block includes specific JavaScript hooks for data synchronization:
   - Current month
   - Toeslag settings (name and percentage)
   - Simulation initialization status
+  - Slide number and change history
+  - Original starting saldo
 
 ### Data Model
 - Structured around monthly financial periods
 - Supports multiple types of financial transactions:
   - Regular income
-  - Benefits (toeslagen)
+  - Benefits (toeslagen) with adjustable percentages
   - Fixed expenses
-  - Variable expenses
+  - Variable expenses with sequential processing
   - Custom expenses
 
 ### UI Components
-- Progress visualization
-- Financial amount display
-- Loading states
-- Navigation controls
+- Progress visualization with month indicators
+- Financial amount display with smooth animations
+- Loading states for asynchronous operations
+- Navigation controls with conditional visibility
+- Dynamic text replacement for question variables
+
+### Animation and Transitions
+- Smooth saldo amount transitions with requestAnimationFrame
+- Visual progress indicator for month progression
+- Conditional display of UI elements based on simulation state
 
 ## Deployment
 - CSS and JS files are deployed to a subdirectory structure
