@@ -1,13 +1,16 @@
 # README
 
-## Setup
-
-..
+## Local Setup
+- install docker
+- install make
+- run `make init`
+- run `make console`
+- run `make test`
 
 ## Deploy en versies
-De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv filezilla. Map toeslagen.
+De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv ssh ftp (bijvoorbeeld met FileZilla). Map toeslagen.
 
-Versies gaan met een submap daar in. Zie de VERSION bestand in de root. Dat is om tussen onderzoeken geen problemen te krijgen.
+Versies gaan met een submap daar in. Zie de VERSION bestand in de root.
 
 ## Instructie voor onderzoekers
 Zie https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/
