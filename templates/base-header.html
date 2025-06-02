@@ -16,11 +16,11 @@
         </div>
     </div>
 </div>
-<script>
+<script id="toeslagen-header">
 
     if (!window.toeslagen) {
         const script = document.createElement('script');
-        script.src = 'https://cdn.chrisdejager.nl/toeslagen/v5/toeslagen.js';
+        script.src = 'src/toeslagen.js';
         script.defer = true;
         script.type = 'module';
         script.onload = () => { init(); };

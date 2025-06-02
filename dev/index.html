@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toeslagen Test Environment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/toeslagen.css">
+</head>
+<body>
+
+    <div class="survey-container">
+        <div id="injected-header"></div>
+
+        <div id="question-container">
+            <!-- Question blocks will be loaded here -->
+        </div>
+        
+        <div class="navigation-buttons">
+            <button id="prev-btn" disabled>Previous</button>
+            <button id="next-btn">Next</button>
+        </div>
+        
+        <div class="debug-panel">
+            <h3>Debug Info</h3>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+
+    <!-- Include the mock environment -->
+    <script src="mock-qualtrics.js" type="module"></script>
+</body>
+</html>
