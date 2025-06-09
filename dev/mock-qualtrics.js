@@ -1,56 +1,13 @@
-const blocks = [
-    {
-        // Using a local CSV file instead of Google Sheets URL
-        google_sheet_csv_url: 'test-data.csv',
-        enable_previous_button: '0',
-        start_saldo: '5000',
-        month: 'Januari',
-        toeslag_naam: 'Zorgtoeslag',
-        toeslag_percentage: '100',
-        question: 'Dit is de eerste vraag voor Januari. Wat is uw inkomen deze maand?'
-    },
-    {
-        enable_previous_button: '1',
-        start_saldo: '5000',
-        month: 'Februari',
-        toeslag_naam: 'Zorgtoeslag',
-        toeslag_percentage: '100',
-        question: 'Dit is de vraag voor Februari. Wat zijn uw vaste lasten deze maand?'
-    },
-    {
-        enable_previous_button: '1',
-        start_saldo: '5000',
-        month: 'Maart',
-        toeslag_naam: 'Zorgtoeslag',
-        toeslag_percentage: '100',
-        question: 'Dit is de vraag voor Maart. Wat zijn uw variabele uitgaven deze maand?'
-    }
-];
 
-// Function to get the current block's variable values
-function getCurrentBlockVariables() {
-    // Get the current block's data
-    const block = blocks[currentBlockIndex];
-    
-    // Map block properties to Qualtrics variables
-    return {
-        '${e://Field/header}': 'simulation-start',
-        '${e://Field/google_sheet_csv_url}': block.google_sheet_csv_url || 'test-data.csv',
-        '${e://Field/enable_previous_button}': block.enable_previous_button || '0',
-        '${e://Field/start_saldo}': block.start_saldo || '0',
-        '${e://Field/month}': block.month || '',
-        '${e://Field/toeslag_naam}': block.toeslag_naam || '',
-        '${e://Field/toeslag_percentage}': block.toeslag_percentage || '0'
-    };
-}
+import { blocks } from './blocks.js';
 
 // Mock Qualtrics SurveyEngine object
 window.Qualtrics = window.Qualtrics || {};
 window.Qualtrics.SurveyEngine = window.Qualtrics.SurveyEngine || {};
 
 // Store callbacks for different events
-const onReadyCallbacks = [];
-const onPageSubmitCallbacks = [];
+let onReadyCallbacks = [];
+let onPageSubmitCallbacks = [];
 
 // Mock Qualtrics methods
 window.Qualtrics.SurveyEngine.addOnReady = function(callback) {
@@ -64,19 +21,48 @@ window.Qualtrics.SurveyEngine.addOnPageSubmit = function(callback) {
 // Current block state
 let currentBlockIndex = 0;
 
-// Function to update the UI based on current block
-function updateUI() {
-    injectHeader();
+let blockVariables = {};
 
-//    replaceQualtricsVariables();
+function updateBlockVariablesWithBlock(block) {
+    blockVariables = {
+        header: block.header || blockVariables.header || '',
+        google_sheet_csv_url: block.google_sheet_csv_url || blockVariables.google_sheet_csv_url || '',
+        enable_previous_button: block.enable_previous_button || blockVariables.enable_previous_button || '',
+        start_saldo: block.start_saldo || blockVariables.start_saldo || '',
+        month: block.month || blockVariables.month || '',
+        toeslag_naam: block.toeslag_naam || blockVariables.toeslag_naam || '',
+        toeslag_percentage: block.toeslag_percentage || blockVariables.toeslag_percentage || ''
+    };
+}
 
-    const block = blocks[currentBlockIndex];
+// Function to get the current block's variable values
+function getReplacementVariables() {
+    return {
+        '${e://Field/header}': blockVariables.header,
+        '${e://Field/google_sheet_csv_url}': blockVariables.google_sheet_csv_url,
+        '${e://Field/enable_previous_button}': blockVariables.enable_previous_button,
+        '${e://Field/start_saldo}': blockVariables.start_saldo,
+        '${e://Field/month}': blockVariables.month,
+        '${e://Field/toeslag_naam}': blockVariables.toeslag_naam,
+        '${e://Field/toeslag_percentage}': blockVariables.toeslag_percentage
+    };
+}
+
+async function updateUI() {
+
+    onReadyCallbacks = [];
+    onPageSubmitCallbacks = [];
+    
+    const currentBlock = blocks[currentBlockIndex];
+    updateBlockVariablesWithBlock(currentBlock);
+
+    await injectHeaderAndReplaceVariables();
     
     // Update question text
     document.getElementById('question-container').innerHTML = `
-        <h2>${block.month}</h2>
-        <p>${block.question}</p>
-    `;
+            <h2>${blockVariables.month}</h2>
+            <p>${currentBlock.text}</p>
+        `;
     
     // Update navigation buttons
     document.getElementById('prev-btn').disabled = currentBlockIndex === 0;
@@ -85,11 +71,56 @@ function updateUI() {
     // Update debug info
     document.getElementById('debug-info').innerHTML = `
         <p><strong>Current Block:</strong> ${currentBlockIndex + 1} of ${blocks.length}</p>
-        <p><strong>Month:</strong> ${block.month}</p>
-        <p><strong>Start Saldo:</strong> €${block.start_saldo}</p>
-        <p><strong>Toeslag:</strong> ${block.toeslag_naam} (${block.toeslag_percentage}%)</p>
+        <p><strong>Month:</strong> ${currentBlock.month}</p>
+        <p><strong>Start Saldo:</strong> €${currentBlock.start_saldo}</p>
+        <p><strong>Toeslag:</strong> ${currentBlock.toeslag_naam} (${currentBlock.toeslag_percentage}%)</p>
     `;
 
+    // Execute block-specific JavaScript if it exists
+    if (currentBlock.javascript && typeof currentBlock.javascript === 'function') {
+        try {
+            currentBlock.javascript();
+        } catch (e) {
+            console.error('Error executing block JavaScript:', e);
+        }
+    }
+    
+    runOnReadyCallbacks();
+}
+
+async function injectHeaderAndReplaceVariables() {
+
+    const response = await fetch('/templates/base-header.html');
+    let html = await response.text();
+    
+    html = html.replace(/src=".*?pinpas\.png"/, 'src="/assets/pinpas.png"')
+              .replace(/src=".*?toeslagen\.js"/, 'src="/src/toeslagen.js"');
+    html = replaceQualtricsVariables(html, getReplacementVariables());
+
+    const target = document.getElementById('injected-header');
+    target.innerHTML = html;
+    
+    const deadScript = target.querySelector('script#toeslagen-header');
+    if (!deadScript) {
+        return;
+    }
+
+    const firstRun = window.toeslagen !== undefined;
+
+    const newScript = document.createElement('script');
+    newScript.id = 'toeslagen-header';
+    newScript.textContent = deadScript.textContent;
+    target.replaceChild(newScript, deadScript);
+    
+    // at first run the runOnReadyCallbacks will be empty in updateUi because newScript is not ready yet
+    if (firstRun) {
+        setTimeout(() => {
+            runOnReadyCallbacks();
+        }, 1000);
+    }
+}
+
+function runOnReadyCallbacks() {
     onReadyCallbacks.forEach(callback => {
         try {
             callback();
@@ -97,38 +128,11 @@ function updateUI() {
             console.error('Error in onReady callback:', e);
         }
     });
-
 }
 
-function injectHeader() {
-    fetch('/templates/base-header.html')
-    .then(res => res.text())
-    .then(html => {
-        html = html.replace(/src=".*?toeslagen\.png"/, 'src="/assets/toeslagen.png"')
-                  .replace(/src=".*?toeslagen\.js"/, 'src="/src/toeslagen.js"');
-        html = replaceQualtricsVariables(html);
-
-        const target = document.getElementById('injected-header');
-        
-        target.innerHTML = html;
-        
-        const deadScript = target.querySelector('script#toeslagen-header');
-        if (deadScript) {
-            const newScript = document.createElement('script');
-            newScript.id = 'toeslagen-header';
-            newScript.textContent = deadScript.textContent;
-            target.replaceChild(newScript, deadScript);
-        } 
-    })
-    .catch(error => {
-        console.error('Error loading header:', error);
-    });
-}
-
-function replaceQualtricsVariables(html) {
-    const blockVariables = getCurrentBlockVariables();
+function replaceQualtricsVariables(html, variables) {
     
-    Object.entries(blockVariables).forEach(([varName, value]) => {
+    Object.entries(variables).forEach(([varName, value]) => {
         const escapedVarName = varName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         html = html.replace(new RegExp(escapedVarName, 'g'), value);
     });
@@ -171,13 +175,13 @@ function goToPrevious() {
     }
 }
 
-// Initialize the test environment
-document.addEventListener('DOMContentLoaded', () => {
-    // Set up event listeners for navigation buttons
+document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('next-btn').addEventListener('click', goToNext);
     document.getElementById('prev-btn').addEventListener('click', goToPrevious);
     
-    // Load the first block
-    updateUI();
-    
+    try {
+        await updateUI();
+    } catch (error) {
+        console.error('Error initializing UI:', error);
+    }
 });
