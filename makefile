@@ -22,6 +22,9 @@ test-env:
 test-debug:
 	docker compose run --rm test-debug
 
+build:
+	docker compose run --rm node npm run build
+
 down:
 	docker compose down
 

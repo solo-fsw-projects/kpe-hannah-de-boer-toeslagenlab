@@ -1,31 +1,33 @@
 import { defineConfig } from 'vite';
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
 
 const version = readFileSync('VERSION', 'utf-8').trim();
 
 export default defineConfig({
   build: {
     outDir: `dist/${version}`,
+    emptyOutDir: false,
     lib: {
-      entry: resolve(__dirname, 'src/toeslagen.js'),
+      entry: 'src/toeslagen.js',
       name: 'ToeslagenLib',
-      formats: ['iife'],
+      formats: ['es'],
       fileName: () => 'toeslagen.js'
     },
+    minify: false,
     rollupOptions: {
       output: {
         assetFileNames: '[name][extname]'
       }
     }
   },
-  root: 'test-env',
+  root: '.',
   publicDir: false,
   appType: 'mpa',
   server: {
-    open: '/index.html',
+    open: '/test-env/',
     fs: {
-      strict: true
-    }
+      strict: true,
+    },
+    host: true
   }
 });

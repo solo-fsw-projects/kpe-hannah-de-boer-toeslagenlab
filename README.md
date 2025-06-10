@@ -8,8 +8,6 @@
 - install docker
 - install make & git
 - run `make init`
-- run `make test-env`
-- open displayed url
 
 ### Windows (without docker)
 - install git and checkout this repo
@@ -18,7 +16,30 @@
 - run `npm run test-env`
 - open displayed url
 
+## Lokale preview
+### Linux or Windows (with docker)
+- run `make test-env`
+- open displayed url + /test-env/
+
+### Windows (without docker)
+- run `npm run test-env`
+- open displayed url + /test-env/
+
+## Ontwikkelen
+* Gebruik Jira om nieuwe features of bugs te tracken
+* Maak branch aan voor de nieuwe versie (bijv v99), en commit de ontwikkelingen daar in, pas VERSION aan
+* Test handmatig wijzigingen uit met lokale preview
+* Schrijf evt automatische testen voor de wijzigingen of pas bestaande aan
+* Commit wijzigingen (hoe vaker hoe beter)
+* Push wijzigingen naar bitbucket
+* Test handmatig wijzigingen in demo project op Qualtrics
+* Check of bitbucket pipelines groen licht geven (voeren de automatische tests uit)
+* Wanneer klaar dan kan het jira ticket naar done
+
 ## Deploy en versies
+* run `make build` of `npm run build`
+* zie de bestanden in de dist map
+
 De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv ssh ftp (bijvoorbeeld met FileZilla). Map toeslagen.
 
 Versies gaan met een submap daar in. Zie de VERSION bestand in de root.
