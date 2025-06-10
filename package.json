@@ -6,7 +6,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit",
     "test:functional": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/functional",
-    "dev": "vite --host",
+    "test-env": "vite --host",
     "build": "node build.js && vite build"
   },
   "devDependencies": {

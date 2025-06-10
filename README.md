@@ -1,11 +1,22 @@
 # README
-bla
+
+
+
 ## Local Setup
+### Linux or Windows (with docker)
+- install git and checkout this repo
 - install docker
-- install make
+- install make & git
 - run `make init`
-- run `make console`
-- run `make test`
+- run `make test-env`
+- open displayed url
+
+### Windows (without docker)
+- install git and checkout this repo
+- install nodejs
+- run `npm install`
+- run `npm run test-env`
+- open displayed url
 
 ## Deploy en versies
 De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv ssh ftp (bijvoorbeeld met FileZilla). Map toeslagen.

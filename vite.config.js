@@ -19,7 +19,7 @@ export default defineConfig({
       }
     }
   },
-  root: 'dev',
+  root: 'test-env',
   publicDir: false,
   appType: 'mpa',
   server: {

@@ -16,11 +16,13 @@ test-unit:
 test-functional:
 	docker compose run --rm test npm run test:functional
 
-webserver:
-	docker compose up -d webserver
+test-env:
+	docker compose run --rm node npm run test-env
 
 test-debug:
 	docker compose run --rm test-debug
 
 down:
 	docker compose down
+
+.PHONY: console init test test-unit test-functional test-env test-debug down
