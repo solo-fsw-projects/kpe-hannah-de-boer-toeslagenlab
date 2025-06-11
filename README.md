@@ -11,8 +11,9 @@
 
 ### Windows (without docker)
 - install git and checkout this repo
-- install nodejs
+- install nodejs and make sure it is added to the path
 - run `npm install`
+- run `windows-create-symlinks.bat`
 - run `npm run test-env`
 - open displayed url
 
