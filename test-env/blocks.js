@@ -41,6 +41,10 @@ const blocks = [
         }
     },
     {
+        month: 'november 2024',
+        text: 'We komen in de maand November',
+    },
+    {
         text: 'Dit is de laatste pagina van de simulatie. Klik op volgende',
     },
     {

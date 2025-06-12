@@ -26,6 +26,10 @@ export class SimulationManager {
         return Array.isArray(this.months) && this.months.length > 0;
     }
 
+    isDifferentThenOriginalSaldo(saldo) {
+        return this.originalSaldo !== saldo;
+    }
+
     startNewSimulation(startSaldo) {
         if (typeof startSaldo !== 'number') {
             throw new Error('startSaldo must be a number');
@@ -55,7 +59,7 @@ export class SimulationManager {
         this.slidesChangedStack[this.slideNumber] = true;
     }
 
-    updateToeslagSettings(naam, percentage) {
+    applyToeslagSettings(naam, percentage) {
         if (typeof naam !== 'string') {
             throw new Error('naam must be a string');
         }
@@ -93,13 +97,9 @@ export class SimulationManager {
         }
     }
 
-    updateCurrentMonth(monthName) {
-        if (typeof monthName !== 'string') {
-            throw new Error('monthName must be a string');
-        }
-        if (!monthName) return;
+    setCurrentMonth(monthName) {
 
-        let foundMonth = this.months.find(month => month.name === monthName);
+        let foundMonth = this.getMonth(monthName);
         if (!foundMonth) {
             console.error(`Cannot find ${monthName} in months data`);
             this.currentMonth = undefined;
@@ -109,14 +109,24 @@ export class SimulationManager {
             this.currentMonth = foundMonth;
             console.log(`Month changed to ${foundMonth.name}`);
         }
+
         return true;
+    }
+
+    getMonth(monthName) {
+        if (typeof monthName !== 'string') {
+            throw new Error('monthName must be a string');
+        }
+        if (!monthName) return;
+
+        return this.months.find(month => month.name === monthName);
     }
 
     getCurrentSaldo() {
         return this.simulation?.getSaldo() ?? 0;
     }
 
-    previousSlideChangesSaldo() {
+    previousSlideHasDifferentSaldo() {
         // If we're not tracking any slides yet, allow previous
         if (this.slidesChangedStack.length === 0) return false;
 

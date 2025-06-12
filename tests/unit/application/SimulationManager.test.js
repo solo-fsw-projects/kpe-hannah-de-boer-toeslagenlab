@@ -83,7 +83,7 @@ describe('SimulationManager', () => {
     test('should update toeslag settings', async () => {
         await manager.initialize('http://example.com/data.csv');
         
-        manager.updateToeslagSettings('Huurtoeslag', 50);
+        manager.applyToeslagSettings('Huurtoeslag', 50);
         
         expect(manager.toeslagNaam).toBe('Huurtoeslag');
         expect(manager.toeslagPercentage).toBe(50);
@@ -92,15 +92,15 @@ describe('SimulationManager', () => {
     test('should throw error when updating toeslag settings with invalid types', async () => {
         await manager.initialize('http://example.com/data.csv');
         
-        expect(() => manager.updateToeslagSettings(123, 50)).toThrow('naam must be a string');
-        expect(() => manager.updateToeslagSettings('Huurtoeslag', '50')).toThrow('percentage must be a number');
-        expect(() => manager.updateToeslagSettings(null, null)).toThrow('naam must be a string');
+        expect(() => manager.applyToeslagSettings(123, 50)).toThrow('naam must be a string');
+        expect(() => manager.applyToeslagSettings('Huurtoeslag', '50')).toThrow('percentage must be a number');
+        expect(() => manager.applyToeslagSettings(null, null)).toThrow('naam must be a string');
     });
 
     test('should update current month', async () => {
         await manager.initialize('http://example.com/data.csv');
         
-        const result = manager.updateCurrentMonth('oktober 2024');
+        const result = manager.setCurrentMonth('oktober 2024');
         
         expect(result).toBeTruthy();
         expect(manager.currentMonth).toBeDefined();
@@ -110,7 +110,7 @@ describe('SimulationManager', () => {
     test('should handle invalid month name', async () => {
         await manager.initialize('http://example.com/data.csv');
         
-        const result = manager.updateCurrentMonth('InvalidMonth');
+        const result = manager.setCurrentMonth('InvalidMonth');
         
         expect(result).toBeFalsy();
         expect(manager.currentMonth).toBeUndefined();
@@ -119,9 +119,9 @@ describe('SimulationManager', () => {
     test('should throw error when updating current month with non-string name', async () => {
         await manager.initialize('http://example.com/data.csv');
         
-        expect(() => manager.updateCurrentMonth(123)).toThrow('monthName must be a string');
-        expect(() => manager.updateCurrentMonth(undefined)).toThrow('monthName must be a string');
-        expect(() => manager.updateCurrentMonth(null)).toThrow('monthName must be a string');
+        expect(() => manager.setCurrentMonth(123)).toThrow('monthName must be a string');
+        expect(() => manager.setCurrentMonth(undefined)).toThrow('monthName must be a string');
+        expect(() => manager.setCurrentMonth(null)).toThrow('monthName must be a string');
     });
 
     test('should throw error when applying custom expense with non-number amount', () => {
