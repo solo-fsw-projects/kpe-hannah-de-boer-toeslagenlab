@@ -21,30 +21,30 @@ window.Qualtrics.SurveyEngine.addOnPageSubmit = function(callback) {
 // Current block state
 let currentBlockIndex = 0;
 
-let blockVariables = {};
+let pageVariables = {};
 
-function updateBlockVariablesWithBlock(block) {
-    blockVariables = {
-        header: block.header || blockVariables.header || '',
-        google_sheet_csv_url: block.google_sheet_csv_url || blockVariables.google_sheet_csv_url || '',
-        enable_previous_button: block.enable_previous_button || blockVariables.enable_previous_button || '',
-        start_saldo: block.start_saldo || blockVariables.start_saldo || '',
-        month: block.month || blockVariables.month || '',
-        toeslag_naam: block.toeslag_naam || blockVariables.toeslag_naam || '',
-        toeslag_percentage: block.toeslag_percentage || blockVariables.toeslag_percentage || ''
+function updatePageVariablesWithBlock(block) {
+    pageVariables = {
+        header: block.header !== undefined ? block.header : (pageVariables.header || ''),
+        google_sheet_csv_url: block.google_sheet_csv_url !== undefined ? block.google_sheet_csv_url : (pageVariables.google_sheet_csv_url || ''),
+        enable_previous_button: block.enable_previous_button !== undefined ? block.enable_previous_button : (pageVariables.enable_previous_button || ''),
+        start_saldo: block.start_saldo !== undefined ? block.start_saldo : (pageVariables.start_saldo || ''),
+        month: block.month !== undefined ? block.month : (pageVariables.month || ''),
+        toeslag_naam: block.toeslag_naam !== undefined ? block.toeslag_naam : (pageVariables.toeslag_naam || ''),
+        toeslag_percentage: block.toeslag_percentage !== undefined ? block.toeslag_percentage : (pageVariables.toeslag_percentage || '')
     };
 }
 
 // Function to get the current block's variable values
 function getReplacementVariables() {
     return {
-        '${e://Field/header}': blockVariables.header,
-        '${e://Field/google_sheet_csv_url}': blockVariables.google_sheet_csv_url,
-        '${e://Field/enable_previous_button}': blockVariables.enable_previous_button,
-        '${e://Field/start_saldo}': blockVariables.start_saldo,
-        '${e://Field/month}': blockVariables.month,
-        '${e://Field/toeslag_naam}': blockVariables.toeslag_naam,
-        '${e://Field/toeslag_percentage}': blockVariables.toeslag_percentage
+        '${e://Field/header}': pageVariables.header,
+        '${e://Field/google_sheet_csv_url}': pageVariables.google_sheet_csv_url,
+        '${e://Field/enable_previous_button}': pageVariables.enable_previous_button,
+        '${e://Field/start_saldo}': pageVariables.start_saldo,
+        '${e://Field/month}': pageVariables.month,
+        '${e://Field/toeslag_naam}': pageVariables.toeslag_naam,
+        '${e://Field/toeslag_percentage}': pageVariables.toeslag_percentage
     };
 }
 
@@ -54,19 +54,19 @@ async function updateUI() {
     onPageSubmitCallbacks = [];
     
     const currentBlock = blocks[currentBlockIndex];
-    updateBlockVariablesWithBlock(currentBlock);
+    updatePageVariablesWithBlock(currentBlock);
 
     await injectHeaderAndReplaceVariables();
     
     // Update question text
     document.getElementById('question-container').innerHTML = `
-            <h2>${blockVariables.month}</h2>
+            <h2>${pageVariables.month}</h2>
             <p>${currentBlock.text}</p>
         `;
     
     // Update navigation buttons
-    document.getElementById('prev-btn').disabled = currentBlockIndex === 0;
-    document.getElementById('next-btn').disabled = currentBlockIndex === blocks.length - 1;
+    document.getElementById('PreviousButton').style.display = currentBlockIndex === 0 ? 'none' : 'block';
+    document.getElementById('NextButton').style.display = currentBlockIndex === blocks.length - 1 ? 'none' : 'block';
     
     // Update debug info
     document.getElementById('debug-info').innerHTML = `
@@ -105,7 +105,7 @@ async function injectHeaderAndReplaceVariables() {
         return;
     }
 
-    const firstRun = window.toeslagen !== undefined;
+    const firstRun = window.toeslagen === undefined;
 
     const newScript = document.createElement('script');
     newScript.id = 'toeslagen-header';
@@ -176,8 +176,8 @@ function goToPrevious() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    document.getElementById('next-btn').addEventListener('click', goToNext);
-    document.getElementById('prev-btn').addEventListener('click', goToPrevious);
+    document.getElementById('NextButton').addEventListener('click', goToNext);
+    document.getElementById('PreviousButton').addEventListener('click', goToPrevious);
     
     try {
         await updateUI();

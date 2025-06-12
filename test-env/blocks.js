@@ -1,13 +1,13 @@
 const blocks = [
     {
         google_sheet_csv_url: 'test-data.csv',
-        enable_previous_button: '1',
         text: 'Introductie experiment. Klik op volgende',
     },
     {
         start_saldo: '1000',
         month: 'oktober 2024',
         header: 'simulation-start',
+        enable_previous_button: '1',
         text: 'Start van de simulatie. Klik op volgende',
     },
     {
@@ -48,7 +48,9 @@ const blocks = [
         text: 'Dit is de laatste pagina van de simulatie. Klik op volgende',
     },
     {
-        header: ' ',
+        header: '',
+        month: '',
+        enable_previous_button: '0',
         text: 'Dit is het einde.',
     },
 ];
