@@ -44,7 +44,6 @@ describe('Toeslagen Module Tests', () => {
                 </div>
                 <div class="amount"></div>
             </div>
-            <div id="loading" style="display: none;">Loading...</div>
         `;
         
         // Setup mock data
@@ -148,35 +147,6 @@ describe('Toeslagen Module Tests', () => {
     });
 
     describe('UI Updates', () => {
-        beforeEach(() => {
-            // Reset loading state
-            const loading = document.querySelector('#loading');
-            if (loading) {
-                loading.style.display = 'none';
-            }
-        });
-
-        // test('shows loading state during data fetch', async () => {
-        //     const slowFetch = new Promise(resolve => setTimeout(resolve, 500));
-        //     window.fetch = jest.fn().mockImplementation(() => slowFetch.then(() => new Response(sheetCsv)));
-            
-        //     // Add loading element if not present
-        //     if (!document.querySelector('#loading')) {
-        //         const loading = document.createElement('div');
-        //         loading.id = 'loading';
-        //         loading.style.display = 'none';
-        //         document.body.appendChild(loading);
-        //     }
-            
-        //     const loadPromise = window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
-        //     // Loading state should be visible immediately
-        //     expect(document.querySelector('#loading').style.display).toBe('block');
-            
-        //     await loadPromise;
-        //     // Loading state should be hidden after completion
-        //     expect(document.querySelector('#loading').style.display).toBe('none');
-        // });
-
         test('updates question text with real-world data format', async () => {
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);
             await window.toeslagen.runOnNewSlide('http://localhost', true, 1000, 'oktober 2024', '', 100);

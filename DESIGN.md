@@ -37,7 +37,6 @@ The Toeslagen application is a web-based simulation tool designed to help users 
 5. **Presentation Layer**
    - **UIManager**: Handles all UI-related operations
      - Updates progress bars
-     - Manages loading states
      - Updates financial amounts display with animations
      - Handles question text variables with dynamic content replacement
      - Controls navigation button visibility
@@ -90,7 +89,6 @@ Each block includes specific JavaScript hooks for data synchronization:
 ### UI Components
 - Progress visualization with month indicators
 - Financial amount display with smooth animations
-- Loading states for asynchronous operations
 - Navigation controls with conditional visibility
 - Dynamic text replacement for question variables
 

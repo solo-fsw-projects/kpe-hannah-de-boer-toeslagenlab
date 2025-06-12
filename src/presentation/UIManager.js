@@ -1,18 +1,4 @@
 export class UIManager {
-    static showLoading() {
-        const loading = document.querySelector('#loading');
-        if (loading) {
-            loading.style.display = 'block';
-        }
-    }
-
-    static hideLoading() {
-        const loading = document.querySelector('#loading');
-        if (loading) {
-            loading.style.display = 'none';
-        }
-    }
-
     static updateProgressBar(months, currentMonth) {
         if (!currentMonth || !months?.length || !Array.isArray(months) || !months.includes(currentMonth)) {
             console.error('UIManager.updateProgressBar: invalid parameters', { currentMonth, months });

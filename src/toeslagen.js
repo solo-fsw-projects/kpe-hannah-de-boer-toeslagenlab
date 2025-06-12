@@ -16,7 +16,6 @@ import { UIManager } from './presentation/UIManager.js';
             const parsedToeslagPercentage = Number(currentToeslagPercentage) || 0;
 
             UIManager.togglePreviousButton(parsedEnablePrevious);
-            UIManager.showLoading();
 
             if (!simulationManager.isInitialized()) {
                 // Initialize simulation if needed
@@ -24,7 +23,6 @@ import { UIManager } from './presentation/UIManager.js';
                 await simulationManager.initialize(sheetUrl);
                 if (!simulationManager.isInitialized()) {
                     console.error('Simulation not initialized - missing or invalid data');
-                    UIManager.hideLoading();
                 }
                 return;
             }
@@ -42,7 +40,6 @@ import { UIManager } from './presentation/UIManager.js';
 
             // Update current month
             if (!simulationManager.updateCurrentMonth(parsedMonthName)) {
-                UIManager.hideLoading();
                 return;
             }
 
@@ -68,7 +65,6 @@ import { UIManager } from './presentation/UIManager.js';
             console.log('Slide update completed successfully');
         } catch (error) {
             console.error('Error in runOnNewSlide:', error);
-            UIManager.hideLoading();
         }
     }
 
