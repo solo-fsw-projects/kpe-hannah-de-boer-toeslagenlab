@@ -6,6 +6,9 @@ console:
 
 init:
 	touch .bash_history
+	ln -sfn ../src test-env/src
+	ln -sfn ../assets test-env/assets
+	ln -sfn ../templates test-env/templates
 	docker compose run --rm node npm install
 
 test: test-unit test-functional

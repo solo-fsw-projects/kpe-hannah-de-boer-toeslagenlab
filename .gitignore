@@ -49,3 +49,8 @@ Thumbs.db
 *.wmv
 
 .bash_history
+
+# Test environment
+test-env/src
+test-env/assets
+test-env/templates
