@@ -1,7 +1,5 @@
 # README
 
-
-
 ## Local Setup
 ### Linux or Windows (with docker)
 - install git and checkout this repo
@@ -37,14 +35,17 @@
 * Check of bitbucket pipelines groen licht geven (voeren de automatische tests uit)
 * Wanneer klaar dan kan het jira ticket naar done
 
-bla2
 ## Deploy en versies
+Je "build" een nieuwe versie die in de dist map terecht komt met het versienummer uit VERSION (in dit voorbeeld v6). Vervolgens kun je het mapje van het versienummer uploaden via sftp naar mijn servertje.
+Als je een nieuwe versie hebt gemaakt dan moet de html + js uit de qualtrics-header-v6.html worden gekopieerd naar de look and feel van de survey. En url van externe css worden aangepast.
+
 * run `make build` of `npm run build`
-* zie de bestanden in de dist map
+* zie de nieuwe bestanden in de dist map onder het versie nummer. Bijv dist/v6.
+* Upload/overschrijf het mapje via sftp naar vps.chrisdejager.nl in /var/apps/cdn/toeslagen/
 
-De css en js wordt gedeployed naar een subdir op mijn mijn website bij transip mbv ssh ftp (bijvoorbeeld met FileZilla). Map toeslagen.
-
-Versies gaan met een submap daar in. Zie de VERSION bestand in de root.
+Indien nieuwe versie (van v5 -> v6 bijvoorbeeld), of er veranderd iets anders in de header html / js:
+* onder look & feel van betreffende survey(s) -> general -> header -> edit -> source button, en plak de html + js uit qualtrics-header-v6.html, dan opslaan, en dan apply
+* onder look & feel van betreffende survey(s) -> style -> external css, en pas de url aan https://cdn.chrisdejager.nl/toeslagen/v6/toeslagen.css, dan apply
 
 ## Instructie voor onderzoekers
 Zie https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/
