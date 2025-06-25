@@ -37,6 +37,7 @@
 * Check of bitbucket pipelines groen licht geven (voeren de automatische tests uit)
 * Wanneer klaar dan kan het jira ticket naar done
 
+bla2
 ## Deploy en versies
 * run `make build` of `npm run build`
 * zie de bestanden in de dist map
