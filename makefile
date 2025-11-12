@@ -20,7 +20,7 @@ test-functional:
 	docker compose run --rm test npm run test:functional
 
 test-env:
-	docker compose run --rm node npm run test-env
+	docker compose run --service-ports --rm node npm run test-env
 
 test-debug:
 	docker compose run --rm test-debug
