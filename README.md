@@ -1,5 +1,58 @@
 # README
 
+## Browser Testing
+
+This project uses Playwright for end-to-end browser testing. The tests simulate real user interactions in a real browser environment.
+
+### Running Tests
+
+1. **Run all tests**:
+   ```bash
+   npm run test:e2e
+   ```
+
+2. **Run tests in UI mode** (interactive test runner):
+   ```bash
+   npm run test:e2e:ui
+   ```
+
+3. **Run tests in debug mode**:
+   ```bash
+   npm run test:e2e:debug
+   ```
+
+4. **Run specific test file**:
+   ```bash
+   npx playwright test tests/e2e/example.spec.js
+   ```
+
+5. **Run tests in a specific browser**:
+   ```bash
+   npx playwright test --project=firefox
+   ```
+
+### Writing Tests
+
+- Test files should be placed in `tests/e2e/` with `.spec.js` extension
+- Use Playwright's page object model for better test organization
+- Follow the Arrange-Act-Assert pattern
+- Use meaningful test descriptions
+
+### Best Practices
+
+1. **Selectors**: Prefer `data-testid` attributes for stable selectors
+2. **Waiting**: Use built-in auto-waiting instead of manual timeouts
+3. **Fixtures**: Use fixtures for test setup/teardown
+4. **Parallelism**: Tests run in parallel by default
+5. **Screenshots**: Automatic screenshots are taken on test failure
+
+### Debugging
+
+1. Use `test.only` to run a single test
+2. Use `test.slow()` to extend timeouts for slow tests
+3. Use `page.pause()` to pause test execution
+4. Check `test-results/` for screenshots and traces
+
 ## Local Setup
 ### Linux or Windows (with docker)
 - install git and checkout this repo

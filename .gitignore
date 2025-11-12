@@ -54,3 +54,5 @@ Thumbs.db
 test-env/src
 test-env/assets
 test-env/templates
+
+.last-run.json
