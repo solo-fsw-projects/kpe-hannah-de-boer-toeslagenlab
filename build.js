@@ -12,6 +12,6 @@ fs.copyFileSync('assets/toeslagen.css', `${distDir}/toeslagen.css`);
 
 const header = fs.readFileSync('templates/base-header.html', 'utf8')
   .replace(/src=\".*?pinpas\.png\"/, `src="${distUrl}/pinpas.png"`)
-  .replace(/src=\".*?toeslagen\.js\"/, `src="${distUrl}/toeslagen.js"`);
+  .replace(/src = '.*?toeslagen\.js'/, `src = '${distUrl}/toeslagen.js'`);
 
 fs.writeFileSync(`dist/qualtrics-header-${version}.html`, header);
