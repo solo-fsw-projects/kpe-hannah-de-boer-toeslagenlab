@@ -31,9 +31,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy build to version folder
-        run: |
-          mkdir -p github-pages/${{ steps.branch.outputs.VERSION }}
-          cp -r dist/${{ steps.branch.outputs.VERSION }}/ github-pages/${{ steps.branch.outputs.VERSION }}/
+        run: mv -r dist/${{ steps.branch.outputs.VERSION }} github-pages/${{ steps.branch.outputs.VERSION }}
 
       - name: Commit and push
         run: |
