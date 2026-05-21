@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
-const version = fs.readFileSync('VERSION', 'utf8').trim();
+const version = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 const distDir = path.join('dist', version);
 const distUrl = `https://cdn.chrisdejager.nl/toeslagen/${version}`;
 

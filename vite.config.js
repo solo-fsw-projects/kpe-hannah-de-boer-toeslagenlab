@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
-import { readFileSync } from 'fs';
+import { execSync } from 'child_process';
 
-const version = readFileSync('VERSION', 'utf-8').trim();
+const version = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
 export default defineConfig({
   build: {

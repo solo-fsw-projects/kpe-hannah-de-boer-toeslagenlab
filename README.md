@@ -26,7 +26,7 @@
 
 ## Ontwikkelen
 * Gebruik Jira om nieuwe features of bugs te tracken
-* Maak branch aan voor de nieuwe versie (bijv v99), en commit de ontwikkelingen daar in, pas VERSION aan
+* Maak branch aan voor de nieuwe versie (bijv v99), en commit de ontwikkelingen daar in
 * Test handmatig wijzigingen uit met lokale preview
 * Schrijf evt automatische testen voor de wijzigingen of pas bestaande aan
 * Commit wijzigingen (hoe vaker hoe beter)
@@ -36,7 +36,7 @@
 * Wanneer klaar dan kan het jira ticket naar done
 
 ## Deploy en versies
-Je "build" een nieuwe versie die in de dist map terecht komt met het versienummer uit VERSION (in dit voorbeeld v6). Vervolgens kun je het mapje van het versienummer uploaden via sftp naar mijn servertje.
+Je "build" een nieuwe versie die in de dist map terecht komt met het versienummer wat gelijk is aan de huidige branch naam (in dit voorbeeld v6).
 Als je een nieuwe versie hebt gemaakt dan moet de html + js uit de qualtrics-header-v6.html worden gekopieerd naar de look and feel van de survey. En url van externe css worden aangepast.
 
 * run `make build` of `npm run build`
