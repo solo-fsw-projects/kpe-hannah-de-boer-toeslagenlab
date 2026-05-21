@@ -1,0 +1,41 @@
+name: Deploy build to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get branch name
+        id: branch
+        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Checkout github-pages
+        uses: actions/checkout@v4
+        with:
+          ref: github-pages
+          path: github-pages
+
+      - name: Copy build to version folder
+        run: |
+          mkdir -p github-pages/${{ steps.branch.outputs.VERSION }}
+          cp -r dist/* github-pages/${{ steps.branch.outputs.VERSION }}/
+
+      - name: Commit and push
+        run: |
+          cd github-pages
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "deploy ${{ steps.branch.outputs.VERSION }}"
+          git push
