@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 
 const version = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 const distDir = path.join('dist', version);
-const distUrl = `https://cdn.chrisdejager.nl/toeslagen/${version}`;
+const distUrl = `https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/${version}`;
 
 fs.mkdirSync(distDir, { recursive: true });
 
