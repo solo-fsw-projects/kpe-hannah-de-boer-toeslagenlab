@@ -25,5 +25,8 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     }
+  },
+  "dependencies": {
+    "read-excel-file": "^9.0.10"
   }
 }
