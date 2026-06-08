@@ -21,9 +21,10 @@ describe('SheetService', () => {
                 ['January', 'Salary', 2000, '', '', '', '', '']
             ];
 
+            const mockArrayBuffer = new ArrayBuffer(8);
             global.fetch = jest.fn().mockResolvedValueOnce({
                 ok: true,
-                blob: jest.fn().mockResolvedValueOnce(new Blob())
+                arrayBuffer: jest.fn().mockResolvedValueOnce(mockArrayBuffer)
             });
             mockReadExcel.mockResolvedValueOnce([{ data: mockSheetData }]);
 
@@ -31,7 +32,7 @@ describe('SheetService', () => {
 
             expect(result).toBe(mockSheetData);
             expect(global.fetch).toHaveBeenCalledWith('http://example.com/data.xlsx');
-            expect(mockReadExcel).toHaveBeenCalledWith(expect.any(Blob), { sheets: ['Sheet1'] });
+            expect(mockReadExcel).toHaveBeenCalledWith(mockArrayBuffer, { sheets: ['Sheet1'] });
         });
 
         test('should throw error when HTTP request fails', async () => {
@@ -48,7 +49,7 @@ describe('SheetService', () => {
         test('should throw error when reading sheet fails', async () => {
             global.fetch = jest.fn().mockResolvedValueOnce({
                 ok: true,
-                blob: jest.fn().mockResolvedValueOnce(new Blob())
+                arrayBuffer: jest.fn().mockResolvedValueOnce(new ArrayBuffer(8))
             });
             mockReadExcel.mockRejectedValueOnce(new Error('Failed to read file'));
 

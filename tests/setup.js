@@ -1,13 +1,5 @@
 import { jest } from '@jest/globals';
 
-// Mock fetch globally
-global.fetch = jest.fn();
-
-// Reset fetch mock before each test
-beforeEach(() => {
-    global.fetch.mockClear();
-});
-
 // Mock performance.now() for animation testing
 if (!global.performance) {
     global.performance = {};

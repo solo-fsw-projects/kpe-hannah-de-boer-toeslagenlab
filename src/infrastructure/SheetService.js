@@ -11,8 +11,8 @@ export class SheetService {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const file = await response.blob();
-        const results = await readExcel(file, { sheets: [sheetName] });
+        const arrayBuffer = await response.arrayBuffer();
+        const results = await readExcel(arrayBuffer, { sheets: [sheetName] });
         return results[0].data;
     }
 
