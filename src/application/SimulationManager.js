@@ -14,9 +14,9 @@ export class SimulationManager {
         this.slidesChangedStack = []; // Stack to track slide sequence
     }
 
-    async initialize(sheetUrl) {
+    async initialize(sheetUrl, sheetName) {
         if (this.months === null && sheetUrl) {
-            const data = await SheetService.fetchFromUrl(sheetUrl, 'Sheet1');
+            const data = await SheetService.fetchFromUrl(sheetUrl, sheetName);
             this.months = SheetService.convertSheetToObjects(data);
         }
     }

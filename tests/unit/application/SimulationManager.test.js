@@ -61,9 +61,9 @@ describe('SimulationManager', () => {
     });
 
     test('should initialize months from sheet data', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Scenario A');
 
-        expect(SheetService.fetchFromUrl).toHaveBeenCalledWith('http://example.com/data.xlsx', 'Sheet1');
+        expect(SheetService.fetchFromUrl).toHaveBeenCalledWith('http://example.com/data.xlsx', 'Scenario A');
         expect(SheetService.convertSheetToObjects).toHaveBeenCalledWith(mockSheetData);
         expect(manager.isInitialized()).toBeTruthy();
     });
@@ -83,7 +83,7 @@ describe('SimulationManager', () => {
     });
 
     test('should update toeslag settings', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Sheet1');
         
         manager.applyToeslagSettings('Huurtoeslag', 50);
         
@@ -92,7 +92,7 @@ describe('SimulationManager', () => {
     });
 
     test('should throw error when updating toeslag settings with invalid types', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Sheet1');
         
         expect(() => manager.applyToeslagSettings(123, 50)).toThrow('naam must be a string');
         expect(() => manager.applyToeslagSettings('Huurtoeslag', '50')).toThrow('percentage must be a number');
@@ -100,7 +100,7 @@ describe('SimulationManager', () => {
     });
 
     test('should update current month', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Sheet1');
         
         const result = manager.setCurrentMonth('oktober 2024');
         
@@ -110,7 +110,7 @@ describe('SimulationManager', () => {
     });
 
     test('should handle invalid month name', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Sheet1');
         
         const result = manager.setCurrentMonth('InvalidMonth');
         
@@ -119,7 +119,7 @@ describe('SimulationManager', () => {
     });
 
     test('should throw error when updating current month with non-string name', async () => {
-        await manager.initialize('http://example.com/data.xlsx');
+        await manager.initialize('http://example.com/data.xlsx', 'Sheet1');
         
         expect(() => manager.setCurrentMonth(123)).toThrow('monthName must be a string');
         expect(() => manager.setCurrentMonth(undefined)).toThrow('monthName must be a string');
