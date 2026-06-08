@@ -1,8 +1,11 @@
 import { jest } from '@jest/globals';
 import { Month } from '@/domain/models/Month.js';
-import { mockReadExcel, mockReadExcelModule } from '../../mocks/readExcelMock.js';
 
-mockReadExcelModule();
+const mockReadExcel = jest.fn();
+
+jest.unstable_mockModule('read-excel-file/browser', () => ({
+    default: mockReadExcel
+}));
 
 const { SheetService } = await import('@/infrastructure/SheetService.js');
 

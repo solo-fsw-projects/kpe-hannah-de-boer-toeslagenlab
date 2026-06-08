@@ -1,23 +1,25 @@
 import { jest } from '@jest/globals';
 import { SimulationManager } from '@/application/SimulationManager.js';
-import { CSVService } from '@/infrastructure/CSVService.js';
+import { SheetService } from '@/infrastructure/SheetService.js';
 
-CSVService.fetchCSV = jest.fn();
-CSVService.convertCSVToObjects = jest.fn();
+SheetService.fetchFromUrl = jest.fn();
+SheetService.convertSheetToObjects = jest.fn();
 
 describe('SimulationManager', () => {
     let manager;
-    const mockCSVData = 'month,income,amount,fixed expenses,amount,variable expense,description,amount,total income,total fixed,total variable,balance\n' +
-        'oktober 2024,Salaris,2289,Huur,628,boodschappen,Je moet boodschappen en huishoudelijke uitgaven betalen,489,2649,1554,629,466\n' +
-        ',Huurtoeslag,360,Energie en water,233,kleding,Je koopt kleding,140,,,,\n' +
-        ',,,Verzekeringen,244,,,,,,,\n' +
-        ',,"Abonnement voor internet, TV en telefoon",141,,,,,,,\n' +
-        ',,,Vervoer,308,,,,,,,';
+    const mockSheetData = [
+        ['month', 'income', 'amount', 'fixed expenses', 'amount', 'variable expense', 'description', 'amount'],
+        ['oktober 2024', 'Salaris', 2289, 'Huur', 628, 'boodschappen', 'Je moet boodschappen en huishoudelijke uitgaven betalen', 489],
+        ['', 'Huurtoeslag', 360, 'Energie en water', 233, 'kleding', 'Je koopt kleding', 140],
+        ['', '', '', 'Verzekeringen', 244, '', '', ''],
+        ['', '', '', 'Abonnement voor internet, TV en telefoon', 141, '', '', ''],
+        ['', '', '', 'Vervoer', 308, '', '', '']
+    ];
 
     beforeEach(() => {
         manager = new SimulationManager();
-        CSVService.fetchCSV.mockResolvedValue(mockCSVData);
-        CSVService.convertCSVToObjects.mockReturnValue([
+        SheetService.fetchFromUrl.mockResolvedValue(mockSheetData);
+        SheetService.convertSheetToObjects.mockReturnValue([
             {
                 name: 'oktober 2024',
                 getIncomes: () => [{
@@ -58,11 +60,11 @@ describe('SimulationManager', () => {
         expect(manager.toeslagPercentage).toBe(0);
     });
 
-    test('should initialize months from CSV data', async () => {
-        await manager.initialize('http://example.com/data.csv');
-        
-        expect(CSVService.fetchCSV).toHaveBeenCalledWith('http://example.com/data.csv');
-        expect(CSVService.convertCSVToObjects).toHaveBeenCalledWith(mockCSVData);
+    test('should initialize months from sheet data', async () => {
+        await manager.initialize('http://example.com/data.xlsx');
+
+        expect(SheetService.fetchFromUrl).toHaveBeenCalledWith('http://example.com/data.xlsx', 'Sheet1');
+        expect(SheetService.convertSheetToObjects).toHaveBeenCalledWith(mockSheetData);
         expect(manager.isInitialized()).toBeTruthy();
     });
 
@@ -81,7 +83,7 @@ describe('SimulationManager', () => {
     });
 
     test('should update toeslag settings', async () => {
-        await manager.initialize('http://example.com/data.csv');
+        await manager.initialize('http://example.com/data.xlsx');
         
         manager.applyToeslagSettings('Huurtoeslag', 50);
         
@@ -90,7 +92,7 @@ describe('SimulationManager', () => {
     });
 
     test('should throw error when updating toeslag settings with invalid types', async () => {
-        await manager.initialize('http://example.com/data.csv');
+        await manager.initialize('http://example.com/data.xlsx');
         
         expect(() => manager.applyToeslagSettings(123, 50)).toThrow('naam must be a string');
         expect(() => manager.applyToeslagSettings('Huurtoeslag', '50')).toThrow('percentage must be a number');
@@ -98,7 +100,7 @@ describe('SimulationManager', () => {
     });
 
     test('should update current month', async () => {
-        await manager.initialize('http://example.com/data.csv');
+        await manager.initialize('http://example.com/data.xlsx');
         
         const result = manager.setCurrentMonth('oktober 2024');
         
@@ -108,7 +110,7 @@ describe('SimulationManager', () => {
     });
 
     test('should handle invalid month name', async () => {
-        await manager.initialize('http://example.com/data.csv');
+        await manager.initialize('http://example.com/data.xlsx');
         
         const result = manager.setCurrentMonth('InvalidMonth');
         
@@ -117,7 +119,7 @@ describe('SimulationManager', () => {
     });
 
     test('should throw error when updating current month with non-string name', async () => {
-        await manager.initialize('http://example.com/data.csv');
+        await manager.initialize('http://example.com/data.xlsx');
         
         expect(() => manager.setCurrentMonth(123)).toThrow('monthName must be a string');
         expect(() => manager.setCurrentMonth(undefined)).toThrow('monthName must be a string');
