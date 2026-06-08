@@ -71,9 +71,9 @@ async function updateUI() {
     // Update debug info
     document.getElementById('debug-info').innerHTML = `
         <p><strong>Current Block:</strong> ${currentBlockIndex + 1} of ${blocks.length}</p>
-        <p><strong>Month:</strong> ${currentBlock.month}</p>
-        <p><strong>Start Saldo:</strong> €${currentBlock.start_saldo}</p>
-        <p><strong>Toeslag:</strong> ${currentBlock.toeslag_naam} (${currentBlock.toeslag_percentage}%)</p>
+        <p><strong>Month:</strong> ${pageVariables.month}</p>
+        <p><strong>Start Saldo:</strong> €${pageVariables.start_saldo}</p>
+        <p><strong>Toeslag:</strong> ${pageVariables.toeslag_naam} (${pageVariables.toeslag_percentage}%)</p>
     `;
 
     // Execute block-specific JavaScript if it exists

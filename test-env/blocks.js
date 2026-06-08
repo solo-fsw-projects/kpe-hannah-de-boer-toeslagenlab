@@ -1,6 +1,6 @@
 const blocks = [
     {
-        google_sheet_csv_url: 'test-data.csv',
+        google_sheet_csv_url: 'sheet1.xlsx',
         text: 'Introductie experiment. Klik op volgende',
     },
     {
@@ -8,6 +8,8 @@ const blocks = [
         month: 'oktober 2024',
         header: 'simulation-start',
         enable_previous_button: '1',
+        toeslag_naam: 'Huurtoeslag',
+        toeslag_percentage: '10',
         text: 'Start van de simulatie. Klik op volgende',
     },
     {
