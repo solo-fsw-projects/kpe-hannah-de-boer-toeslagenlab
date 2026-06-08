@@ -26,7 +26,7 @@ let pageVariables = {};
 function updatePageVariablesWithBlock(block) {
     pageVariables = {
         header: block.header !== undefined ? block.header : (pageVariables.header || ''),
-        google_sheet_csv_url: block.google_sheet_csv_url !== undefined ? block.google_sheet_csv_url : (pageVariables.google_sheet_csv_url || ''),
+        sheet_url: block.sheet_url !== undefined ? block.sheet_url : (pageVariables.sheet_url || ''),
         sheet_name: block.sheet_name !== undefined ? block.sheet_name : (pageVariables.sheet_name || ''),
         enable_previous_button: block.enable_previous_button !== undefined ? block.enable_previous_button : (pageVariables.enable_previous_button || ''),
         start_saldo: block.start_saldo !== undefined ? block.start_saldo : (pageVariables.start_saldo || ''),
@@ -40,7 +40,7 @@ function updatePageVariablesWithBlock(block) {
 function getReplacementVariables() {
     return {
         '${e://Field/header}': pageVariables.header,
-        '${e://Field/google_sheet_csv_url}': pageVariables.google_sheet_csv_url,
+        '${e://Field/sheet_url}': pageVariables.sheet_url,
         '${e://Field/sheet_name}': pageVariables.sheet_name,
         '${e://Field/enable_previous_button}': pageVariables.enable_previous_button,
         '${e://Field/start_saldo}': pageVariables.start_saldo,

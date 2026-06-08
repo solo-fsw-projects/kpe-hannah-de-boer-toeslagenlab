@@ -1,6 +1,6 @@
 const blocks = [
     {
-        google_sheet_csv_url: 'sheet1.xlsx',
+        sheet_url: 'sheet1.xlsx',
         sheet_name: 'Sheet1',
         text: 'Introductie experiment. Klik op volgende',
     },
