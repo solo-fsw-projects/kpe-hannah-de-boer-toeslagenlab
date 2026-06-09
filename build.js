@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const version = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+const version = process.env.BUILD_VERSION ?? execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 const versionSafe = version.replace(/\//g, '-');
 const distDir = path.join('dist', version);
 const distUrl = `https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/${version}`;

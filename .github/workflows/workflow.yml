@@ -41,6 +41,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          BUILD_VERSION: ${{ steps.branch.outputs.VERSION }}
 
       - name: Checkout github-pages
         uses: actions/checkout@v4.2.2
