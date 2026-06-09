@@ -1,9 +1,7 @@
-name: Deploy build to GitHub Pages
+name: CI / Deploy
 
 on:
-  workflow_run:
-    workflows: ["Test"]
-    types: [completed]
+  push:
     branches-ignore:
       - github-pages
 
@@ -11,20 +9,30 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+
   deploy:
-    if: github.event.workflow_run.conclusion == 'success'
+    needs: test
     runs-on: ubuntu-latest
     environment: github-pages
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Get branch name
         id: branch
-        run: echo "VERSION=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
+        run: echo "VERSION=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - uses: actions/setup-node@v4.4.0
 
