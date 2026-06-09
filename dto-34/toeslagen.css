@@ -1,0 +1,84 @@
+.Skin #Buttons #PreviousButton {
+    display: none;
+}
+
+.progress-bar {
+    display: none;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #50164a;
+}
+
+.progress-bar.simulation-start {
+    display: flex;
+}
+
+.line {
+    flex-grow: 1;
+    height: 2px;
+    background: #50164a;
+    position: relative;
+    z-index: 1;
+}
+
+.circle-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transform: translateX(120%);
+}
+
+.circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #50164a;
+    position: relative;
+}
+
+.month-name {
+    font-size: 13px;
+    position: absolute;
+    transform: translateY(130%);
+    text-align: center;
+    color: black;
+}
+
+.saldo {
+    flex-basis: 20%;
+    text-align: center;
+    font-size: 17px;
+    margin-left: 10px;
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+}
+
+.pinpas {
+    width: 40%;
+}
+
+.pinpas img {
+    width: 100%;
+}
+
+.amount-container {
+    width: 60%;
+    padding: 5px;
+}
+
+.amount {
+    display: inline;
+}
+
+.Skin .Matrix .Likert .SingleAnswer table th {
+    text-align: center;
+}
