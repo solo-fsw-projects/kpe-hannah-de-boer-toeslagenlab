@@ -89,6 +89,22 @@ De vier dynamische blokken in de Qualtrics-library:
 | Variabele uitgaven | `window.toeslagen.applyVariableExpense()` |
 | Aangepast bedrag | `window.toeslagen.applyCustomExpense(amount)` |
 
+## CORS-proxy (`resources/proxy.php`)
+
+Voor het inladen van een publiek gedeeld Excel-bestand vanuit de browser (bijv. via OneDrive/SharePoint) is een server-side proxy nodig om CORS-beperkingen te omzeilen.
+
+**Gebruik:**
+```
+https://cdn.chrisdejager.nl/proxy.php?url=<onedrive-url>
+```
+
+De proxy:
+- Voegt automatisch `&download=1` toe aan de OneDrive-URL als dat nog niet aanwezig is
+- Volgt SharePoint-omleidingen inclusief sessiebeheer (cookies)
+- Stuurt het bestand terug met `Access-Control-Allow-Origin: *`
+
+**Vereisten:** PHP met cURL-extensie. Het gedeelde bestand moet anonieme toegang toestaan ("Anyone with the link").
+
 ## Instructie voor onderzoekers
 
 Zie [Instructie Dienst Toeslagen Onderzoek](https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/)
