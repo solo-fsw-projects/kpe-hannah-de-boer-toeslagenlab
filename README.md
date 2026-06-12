@@ -106,5 +106,3 @@ De proxy:
 - Voegt automatisch `&download=1` toe aan de OneDrive-URL als dat nog niet aanwezig is
 - Volgt SharePoint-omleidingen inclusief sessiebeheer (cookies)
 - Stuurt het bestand terug met `Access-Control-Allow-Origin: *`
-
-**Vereisten:** PHP met cURL-extensie. Het gedeelde bestand moet anonieme toegang toestaan ("Anyone with the link").
