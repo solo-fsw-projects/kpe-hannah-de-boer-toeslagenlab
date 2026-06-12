@@ -5,10 +5,10 @@ van de geprogrammeerde uitbreidingen op Qualtrics door Chris de Jager
 
 ## Overview instructie
 
--   Zorg dat de toeslagen scripts zijn ingesteld in het project (dat
+-   Zorg dat de toeslagen stylesheet en javascript goed zijn ingesteld in het project (dat
     doet Chris op verzoek)
 
--   Zorg voor een Excel bestand in het juiste format met alle bedragen
+-   Zorg voor een Excel sheet in het juiste format met alle bedragen
     voor alle maanden.
 
 -   Configureer de start variabelen en start/stop de simulatie op de
@@ -24,7 +24,7 @@ van de geprogrammeerde uitbreidingen op Qualtrics door Chris de Jager
 Als de simulatie wordt gestart ziet de participant bovenaan elk scherm
 een tijdlijn met de maanden, en zijn huidige saldo rechts. De dynamische
 blokken "Inkomsten", "Vaste lasten" en "Variabele uitgave" tonen
-informatie uit een Excel bestand.
+informatie uit een Excel sheet.
 
 ## Excel bestand met bedragen
 
@@ -34,11 +34,11 @@ uitgelezen als een participant start met het onderzoek.
 
 Als je de simulatie wil variëren tussen participanten, zoals
 bijvoorbeeld een hoog en laag inkomen, maak je daarvoor meerdere
-tabbladen (sheets) binnen hetzelfde Excel bestand. Je hoeft maar
+sheets binnen hetzelfde Excel bestand. Je hoeft maar
 **één bestand** publiek te delen; via de variabele **sheet_name** in
-Qualtrics verwijs je naar het juiste tabblad per conditie.
+Qualtrics verwijs je naar het juiste sheet per conditie.
 
-**Essentieel om gelijk te houden per tabblad**:
+**Essentieel om gelijk te houden per sheet**:
 
 -   De maandnamen (en het aantal maanden)
 
@@ -48,7 +48,7 @@ De beschrijvingen en bedragen van de variabele uitgaven mogen variëren.
 Voor de inkomsten en vaste lasten ben je helemaal vrij om te variëren
 (minimaal 1 naam en bedrag).
 
-**Om het simpel te houden kun je een tabblad kopiëren en alleen de
+**Om het simpel te houden kun je een sheet kopiëren en alleen de
 bedragen wijzigen.**
 
 ![](./Pictures/google-sheet-bedragen.png)
@@ -73,15 +73,27 @@ gelijk moeten zijn.
 ## Excel bestand delen via OneDrive
 
 Het Excel bestand moet publiek gedeeld worden via OneDrive zodat het
-vanuit de browser ingeladen kan worden.
+vanuit de browser ingeladen kan worden. Dit hoef je maar **eenmalig**
+in te stellen; alle tabbladen zijn daarna bereikbaar via dezelfde URL.
 
-> *(Screenshots worden nog toegevoegd)*
+1.  Klik op **Delen** bij het Excel bestand in OneDrive.
 
-Zorg dat het bestand gedeeld is met de instelling "Anyone with the link
-can view". De gedeelde link gebruik je vervolgens als waarde voor
-**sheet_url** in Qualtrics (zie volgende paragraaf). Je hoeft dit maar
-eenmalig in te stellen; alle sheets zijn daarna bereikbaar via
-dezelfde URL.
+![](./Pictures/delen1.png)
+
+2.  Klik op **Instellingen voor koppeling**.
+
+![](./Pictures/delen2.png)
+
+3.  Kies voor **Iedereen** (zodat de link zonder inloggen werkt).
+4.  Klik op **Toepassen**.
+5.  Klik op **Koppeling kopiëren** en sluit het venster.
+6.  Plak de gekopieerde link achter de proxy-URL:
+
+```
+https://cdn.chrisdejager.nl/proxy.php?url=<geplakte-onedrive-link>
+```
+
+7.  Gebruik de complete proxy-URL als waarde voor de variabele **sheet_url** in Qualtrics.
 
 ## Configuratie start variabelen
 
