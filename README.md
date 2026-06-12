@@ -1,6 +1,10 @@
 # Toeslagen
 
-Webgebaseerde financiële simulatietool ingebed in Qualtrics-surveys. Zie [DESIGN.md](DESIGN.md) voor de architectuur en technische integratie-referentie.
+Webgebaseerde financiële simulatietool ingebed in Qualtrics-surveys. 
+
+Zie [Instructie Dienst Toeslagen Onderzoek](docs/Instructie%20Dienst%20Toeslagen%20Onderzoek.md) voor de instructie voor onderzoekers. 
+
+Zie [DESIGN.md](DESIGN.md) voor de architectuur en technische integratie-referentie.
 
 ## Setup
 
@@ -104,7 +108,3 @@ De proxy:
 - Stuurt het bestand terug met `Access-Control-Allow-Origin: *`
 
 **Vereisten:** PHP met cURL-extensie. Het gedeelde bestand moet anonieme toegang toestaan ("Anyone with the link").
-
-## Instructie voor onderzoekers
-
-Zie [Instructie Dienst Toeslagen Onderzoek](https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/)
