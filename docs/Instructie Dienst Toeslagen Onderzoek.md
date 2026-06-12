@@ -8,7 +8,7 @@ van de geprogrammeerde uitbreidingen op Qualtrics door Chris de Jager
 -   Zorg dat de toeslagen scripts zijn ingesteld in het project (dat
     doet Chris op verzoek)
 
--   Zorg voor een Google sheet in het juiste format met alle bedragen
+-   Zorg voor een Excel bestand in het juiste format met alle bedragen
     voor alle maanden.
 
 -   Configureer de start variabelen en start/stop de simulatie op de
@@ -24,20 +24,21 @@ van de geprogrammeerde uitbreidingen op Qualtrics door Chris de Jager
 Als de simulatie wordt gestart ziet de participant bovenaan elk scherm
 een tijdlijn met de maanden, en zijn huidige saldo rechts. De dynamische
 blokken "Inkomsten", "Vaste lasten" en "Variabele uitgave" tonen
-informatie uit een google sheet.
+informatie uit een Excel bestand.
 
-## Google sheet met bedragen
+## Excel bestand met bedragen
 
-We gebruiken een google sheet als overzichtelijke input voor de diverse
-inkomsten en uitgaven van de simulatie. Deze wordt in Qualtrics
+We gebruiken een Excel bestand als overzichtelijke input voor de diverse
+inkomsten en uitgaven van de simulatie. Dit wordt in Qualtrics
 uitgelezen als een participant start met het onderzoek.
 
 Als je de simulatie wil variëren tussen participanten, zoals
-bijvoorbeeld een hoog en laag inkomen, dan kun je daarvoor een tweede
-(of meer) sheet gebruiken. Het maakt niet wat voor een naam je geeft aan
-de sheet.
+bijvoorbeeld een hoog en laag inkomen, maak je daarvoor meerdere
+tabbladen (sheets) binnen hetzelfde Excel bestand. Je hoeft maar
+**één bestand** publiek te delen; via de variabele **sheet_name** in
+Qualtrics verwijs je naar het juiste tabblad per conditie.
 
-**Essentieel om gelijk te houden per sheet**:
+**Essentieel om gelijk te houden per tabblad**:
 
 -   De maandnamen (en het aantal maanden)
 
@@ -47,11 +48,8 @@ De beschrijvingen en bedragen van de variabele uitgaven mogen variëren.
 Voor de inkomsten en vaste lasten ben je helemaal vrij om te variëren
 (minimaal 1 naam en bedrag).
 
-**Om het simpel te houden kun je stellen dat je een kopie maakt van de
-sheet en dan alleen de bedragen wijzigt.**
-
-Zie voorbeeld sheet:
-https://docs.google.com/spreadsheets/d/1x8ek8aaOjty0i4IEAOlMYD4EwlBQpfzPmWUC8YuxsT0/edit
+**Om het simpel te houden kun je een tabblad kopiëren en alleen de
+bedragen wijzigen.**
 
 ![](./Pictures/google-sheet-bedragen.png)
 
@@ -72,24 +70,26 @@ variabele lasten worden er echter steeds maar 1 regel per scherm
 getoond. Vandaar dat het aantal variabele lasten per conditie/sheet
 gelijk moeten zijn.
 
-Elke sheet dient los te worden gepubliceerd als csv via: File \> Share
-\> Publish to web.
+## Excel bestand delen via OneDrive
 
-![](./Pictures/sheet-publiceren-csv.png)
+Het Excel bestand moet publiek gedeeld worden via OneDrive zodat het
+vanuit de browser ingeladen kan worden.
 
-Onderaan bij kopje "Published content & settings" kun je zien wat op dit
-moment gepubliceerd is. Daarboven onder "Link" kun je een specifieke
-sheet kiezen en daarnaast het type instellen op csv. De gekopieerde link
-kun je plakken in Qualtrics als embedded data variabele
-"google_sheet_url_csv". Zie de volgende paragraaf.
+> *(Screenshots worden nog toegevoegd)*
 
-Zorg dat het vinkje "automatically republish" aan staat.
+Zorg dat het bestand gedeeld is met de instelling "Anyone with the link
+can view". De gedeelde link gebruik je vervolgens als waarde voor
+**sheet_url** in Qualtrics (zie volgende paragraaf). Je hoeft dit maar
+eenmalig in te stellen; alle sheets zijn daarna bereikbaar via
+dezelfde URL.
 
 ## Configuratie start variabelen
 
 De volgende variabelen dienen te worden gedefinieerd:
 
--   google_sheet_csv_url
+-   sheet_url
+
+-   sheet_name
 
 -   start_saldo
 
@@ -99,21 +99,30 @@ De volgende variabelen dienen te worden gedefinieerd:
 
 -   (optioneel) toeslag_naam en toeslag_percentage
 
-## Google sheet URL
+## Sheet URL en sheet naam
 
 ![](./Pictures/qualtrics-sheet-url.png)
 
 Definieer deze aan het begin van je onderzoek (maar na de informed
-consent keuze), bijvoorbeeld in de conditie branching. Naam van de
-embedded variabele moet zijn: **google_sheet_csv_url**
+consent keuze), bijvoorbeeld in de conditie branching.
 
-Omdat het laden van de sheet 1 a 2 seconden kan duren moet je de url
-instellen in een embedded data blok, en pas het tweede scherm daarna kan
-de simulatie gestart worden.
+De twee embedded variabelen die je instelt zijn:
+
+-   **sheet_url**: de proxy-URL naar het gedeelde OneDrive Excel bestand:
+    `https://cdn.chrisdejager.nl/proxy.php?url=<onedrive-deellink>`
+
+-   **sheet_name**: de naam van het tabblad binnen het Excel bestand
+    (exact gelijk aan de tabbladnaam, hoofdlettergevoelig). Gebruik je
+    meerdere condities, dan stel je per conditie een andere sheet_name in
+    via branching.
+
+Omdat het laden van het bestand 1 à 2 seconden kan duren moet je de
+variabelen instellen in een embedded data blok, en pas het tweede scherm
+daarna kan de simulatie gestart worden.
 
 **Dus:**
 
--   embedded data blok met url naar google sheet
+-   embedded data blok met sheet_url en sheet_name
 
 -   **dan minimaal 1 tussenscherm/blok voor de participant**
 
@@ -188,7 +197,7 @@ Deze blokken kun je in de Survey Flow meerdere keren toevoegen d.m.v.
 maand (en evt het start saldo) instelt m.b.v. een embedded data blok en
 daar je eigen blokken en de dynamische blokken toevoegt in de survey
 flow. Let op dat je evenveel blokken 'variabele kosten' toevoegt in de
-survey flow, als dat er kosten zijn gedefinieerd in de google sheets.
+survey flow, als dat er kosten zijn gedefinieerd in het Excel bestand.
 Zie het bovenstaande screenshot.
 
 ## Overig
@@ -260,7 +269,7 @@ Onder Survey options in Qualtrics, Responses: Enable Back button.
 Soms willen we bij participanten een terugvordering simuleren. Omdat de
 participanten soms de optie hebben om 80% van de toeslag te krijgen is
 de hoogte van de terugvordering afhankelijk van die keuze. Dat betekent
-dat we dat niet in de google sheet kunnen verwerken.
+dat we dat niet in het Excel bestand kunnen verwerken.
 
 De oplossing is dat grotendeels met embedded data variabelen en
 branching wordt opgelost.
@@ -278,7 +287,7 @@ branching wordt opgelost.
 ## "Handmatig" het saldo veranderen met bedrag XX
 
 Dit kan gebruikt worden in situaties dat een conditionele verschillen
-niet mbv de google sheets kunnen worden opgelost. Bijvoorbeeld als een
+niet mbv het Excel bestand kunnen worden opgelost. Bijvoorbeeld als een
 participant de keuze heeft voor 80% dan wel 100% toeslag - los van de
 conditie waar hij/zij in zit.
 
