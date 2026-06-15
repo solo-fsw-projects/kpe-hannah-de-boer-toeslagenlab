@@ -2,10 +2,11 @@ import { defineConfig } from 'vite';
 import { execSync } from 'child_process';
 
 const version = process.env.BUILD_VERSION ?? execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+const majorVersion = (version.match(/^(v\d+)\./)?.[1] ?? version).replace(/\//g, '-');
 
 export default defineConfig({
   build: {
-    outDir: `dist/${version}`,
+    outDir: `dist/${majorVersion}`,
     emptyOutDir: false,
     lib: {
       entry: 'src/toeslagen.js',

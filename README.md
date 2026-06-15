@@ -61,7 +61,9 @@ CI draait automatisch bij elke push via GitHub Actions (`.github/workflows/test.
 make build
 ```
 
-Produceert `dist/<branch-name>/` met de gebundelde JS/CSS en `dist/qualtrics-header-<branch-name>.html`.
+Produceert `dist/<major-versie>/` met de gebundelde JS/CSS en `dist/qualtrics-header-<branch-name>.html`.
+
+Voor versie-branches (bijv. `v6.1`, `v6.2`) wordt altijd gebouwd naar de **major-versie map** (`dist/v6/`). Zo overschrijft een nieuwe minor-release de vorige en blijft de URL in Qualtrics ongewijzigd.
 
 ## Deploy
 
@@ -71,14 +73,18 @@ Deploy gaat via GitHub Actions naar GitHub Pages:
 
 De bestanden zijn daarna beschikbaar via:
 ```
-https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/<branch-name>/
+https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/<major-versie>/
 ```
+
+Bijvoorbeeld: `v6.1` en `v6.2` zijn allebei beschikbaar op `.../v6/`.
 
 ### Qualtrics bijwerken na deploy
 
-Bij een nieuwe versie of gewijzigde header/JS:
+**Alleen nodig bij een nieuwe major-versie** (bijv. `v6` → `v7`):
 - **Look & feel → General → Header → Edit → Source**: plak de inhoud van `qualtrics-header-<branch-name>.html`
 - **Look & feel → Style → External CSS**: pas de URL aan naar `.../toeslagen.css`
+
+Minor-releases (`v6.1` → `v6.2`) overschrijven de bestanden op dezelfde URL — Qualtrics hoeft **niet** bijgewerkt te worden.
 
 ## Gebruik in Qualtrics
 
