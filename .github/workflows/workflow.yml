@@ -52,7 +52,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy build to version folder
-        run: mv dist/${{ steps.branch.outputs.VERSION }} github-pages/
+        env:
+          VERSION: ${{ steps.branch.outputs.VERSION }}
+        run: |
+          MAJOR=$(echo "$VERSION" | sed 's/\..*//')
+          rm -rf github-pages/$MAJOR
+          mv dist/$VERSION github-pages/$MAJOR
+          cp dist/qualtrics-header-$VERSION.html github-pages/$MAJOR/toeslagen-header.html
 
       - name: Commit and push
         run: |

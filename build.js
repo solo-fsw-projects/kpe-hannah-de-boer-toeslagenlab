@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
 const version = process.env.BUILD_VERSION ?? execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 const versionSafe = version.replace(/\//g, '-');
 const majorVersion = (version.match(/^(v\d+)\./)?.[1] ?? version).replace(/\//g, '-');
-const distDir = path.join('dist', majorVersion);
+const distDir = path.join('dist', versionSafe);
 const distUrl = `https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/${majorVersion}`;
 
 fs.mkdirSync(distDir, { recursive: true });
