@@ -23,7 +23,11 @@
       "<rootDir>/tests/setup.js"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^fflate$": "<rootDir>/node_modules/fflate/lib/index.cjs"
     }
+  },
+  "dependencies": {
+    "read-excel-file": "^9.0.10"
   }
 }

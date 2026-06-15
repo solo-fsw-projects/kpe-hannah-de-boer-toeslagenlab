@@ -33,7 +33,7 @@
     function init() {
 
         Qualtrics.SurveyEngine.addOnReady(function() {
-            window.toeslagen.runOnNewSlide('${e://Field/google_sheet_csv_url}', '${e://Field/enable_previous_button}', '${e://Field/start_saldo}', '${e://Field/month}', '${e://Field/toeslag_naam}', '${e://Field/toeslag_percentage}');
+            window.toeslagen.runOnNewSlide('${e://Field/sheet_url}', '${e://Field/sheet_name}', '${e://Field/enable_previous_button}', '${e://Field/start_saldo}', '${e://Field/month}', '${e://Field/toeslag_naam}', '${e://Field/toeslag_percentage}');
         });
         Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
             if (type === "prev") {

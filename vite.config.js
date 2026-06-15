@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { execSync } from 'child_process';
 
-const version = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+const version = process.env.BUILD_VERSION ?? execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
 export default defineConfig({
   build: {

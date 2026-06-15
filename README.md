@@ -1,82 +1,108 @@
-# README
+# Toeslagen
 
-## Local Setup
-### Linux or Windows (with docker)
-- install git and checkout this repo
-- install docker
-- install make & git
-- run `make init`
+Webgebaseerde financiële simulatietool ingebed in Qualtrics-surveys. 
 
-### Windows (without docker)
-- install git and checkout this repo
-- install nodejs and make sure it is added to the path
-- run `npm install`
-- run `windows-create-symlinks.bat`
-- run `npm run test-env`
-- open displayed url
+Zie [Instructie Dienst Toeslagen Onderzoek](docs/Instructie%20Dienst%20Toeslagen%20Onderzoek.md) voor de instructie voor onderzoekers. 
+
+Zie [DESIGN.md](DESIGN.md) voor de architectuur en technische integratie-referentie.
+
+## Setup
+
+### Linux / Windows (met Docker)
+- Installeer git, docker en make
+- Checkout deze repo
+- Run `make init`
+
+### Windows (zonder Docker)
+- Installeer git en Node.js
+- Checkout deze repo
+- Run `npm install`
+- Run `windows-create-symlinks.bat`
 
 ## Lokale preview
-### Linux or Windows (with docker)
-- run `make test-env`
-- open displayed url + /test-env/
 
-### Windows (without docker)
-- run `npm run test-env`
-- open displayed url + /test-env/
+### Met Docker
+```bash
+make test-env
+```
+
+### Zonder Docker
+```bash
+npm run test-env
+```
+
+Open de getoonde URL + `/test-env/`
+
+## Testen
+
+```bash
+make test              # alle testen (Docker)
+make test-unit         # alleen unit testen
+make test-functional   # alleen functionele testen
+make run CMD="node --experimental-vm-modules node_modules/jest/bin/jest.js <pad>"  # specifiek testbestand
+```
+
+Zonder Docker: vervang `make test` door `npm test`, etc.
+
+CI draait automatisch bij elke push via GitHub Actions (`.github/workflows/test.yml`).
 
 ## Ontwikkelen
-* Gebruik Jira om nieuwe features of bugs te tracken
-* Maak branch aan voor de nieuwe versie (bijv v99), en commit de ontwikkelingen daar in
-* Test handmatig wijzigingen uit met lokale preview
-* Schrijf evt automatische testen voor de wijzigingen of pas bestaande aan
-* Commit wijzigingen (hoe vaker hoe beter)
-* Push wijzigingen naar bitbucket
-* Test handmatig wijzigingen in demo project op Qualtrics
-* Check of bitbucket pipelines groen licht geven (voeren de automatische tests uit)
-* Wanneer klaar dan kan het jira ticket naar done
 
-## Deploy en versies
-Je "build" een nieuwe versie die in de dist map terecht komt met het versienummer wat gelijk is aan de huidige branch naam (in dit voorbeeld v6).
-Als je een nieuwe versie hebt gemaakt dan moet de html + js uit de qualtrics-header-v6.html worden gekopieerd naar de look and feel van de survey. En url van externe css worden aangepast.
+1. Maak een branch aan (bijv. `feature/dto-34`)
+2. Test lokaal met `make test-env`
+3. Schrijf of pas automatische testen aan
+4. Push — CI draait automatisch
+5. Test handmatig in het demo-project op Qualtrics
+6. Zet het Jira ticket op done als alles groen is
 
-* run `make build` of `npm run build`
-* zie de nieuwe bestanden in de dist map onder het versie nummer. Bijv dist/v6.
-* Upload/overschrijf het mapje via sftp naar vps.chrisdejager.nl in /var/apps/cdn/toeslagen/
+## Bouwen
 
-Indien nieuwe versie (van v5 -> v6 bijvoorbeeld), of er veranderd iets anders in de header html / js:
-* onder look & feel van betreffende survey(s) -> general -> header -> edit -> source button, en plak de html + js uit qualtrics-header-v6.html, dan opslaan, en dan apply
-* onder look & feel van betreffende survey(s) -> style -> external css, en pas de url aan https://cdn.chrisdejager.nl/toeslagen/v6/toeslagen.css, dan apply
+```bash
+make build
+```
 
-## Instructie voor onderzoekers
-Zie https://docs.google.com/document/d/1LBQ41OCzh_k5DWEfWEhUqVtw20O3pfrtpFUCvKefhi0/
-Met titel "Instructie Dienst Toeslagen Onderzoek"
+Produceert `dist/<branch-name>/` met de gebundelde JS/CSS en `dist/qualtrics-header-<branch-name>.html`.
+
+## Deploy
+
+Deploy gaat via GitHub Actions naar GitHub Pages:
+
+**GitHub → Actions → Deploy build to GitHub Pages → Run workflow** (selecteer de juiste branch)
+
+De bestanden zijn daarna beschikbaar via:
+```
+https://solo-fsw-projects.github.io/kpe-hannah-de-boer-toeslagenlab/<branch-name>/
+```
+
+### Qualtrics bijwerken na deploy
+
+Bij een nieuwe versie of gewijzigde header/JS:
+- **Look & feel → General → Header → Edit → Source**: plak de inhoud van `qualtrics-header-<branch-name>.html`
+- **Look & feel → Style → External CSS**: pas de URL aan naar `.../toeslagen.css`
 
 ## Gebruik in Qualtrics
-- Plaats html uit qualtrics-header.html in de header van theme van survey (look and feel).
-- Er zijn 3 dynamische blokken: Inkomen, Vast lasten, en Variabele uitgaven.
-- De blokken staan in de Qualtrics library.
-- Elk blok heeft een stukje javascript:
-Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
-	if (type === "next") {
-		window.toeslagen.applyIncomes();
-	}
-});
-Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
-	if (type === "next") {
-		window.toeslagen.applyFixedExpenses();
-	}
-});
-Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
-	if (type === "next") {
-		window.toeslagen.applyVariableExpense();
-	}
-});
-- Er is een optie om een aangepast bedrag toe te passen. Dit wordt gebruikt om de terugvordering te doen.
-Qualtrics.SurveyEngine.addOnPageSubmit(function(type) {
-	if (type === "next") {
-		window.toeslagen.applyCustomExpense();
-	}
-});
 
+Zie [DESIGN.md — Qualtrics Integration](DESIGN.md#qualtrics-integration) voor de volledige beschrijving van embedded variables en de publieke API.
 
-## Notes
+De vier dynamische blokken in de Qualtrics-library:
+
+| Blok | Functie |
+|---|---|
+| Inkomen | `window.toeslagen.applyIncomes()` |
+| Vaste lasten | `window.toeslagen.applyFixedExpenses()` |
+| Variabele uitgaven | `window.toeslagen.applyVariableExpense()` |
+| Aangepast bedrag | `window.toeslagen.applyCustomExpense(amount)` |
+
+## CORS-proxy (`resources/proxy.php`)
+
+Voor het inladen van een publiek gedeeld Excel-bestand vanuit de browser (bijv. via OneDrive/SharePoint) is een server-side proxy nodig om CORS-beperkingen te omzeilen.
+
+**Gebruik:**
+```
+https://cdn.chrisdejager.nl/proxy.php?url=<onedrive-url>
+```
+
+De proxy:
+- Voegt automatisch `&download=1` toe aan de OneDrive-URL als dat nog niet aanwezig is
+- Volgt SharePoint-omleidingen inclusief sessiebeheer (cookies)
+- Stuurt het bestand terug met `Access-Control-Allow-Origin: *`

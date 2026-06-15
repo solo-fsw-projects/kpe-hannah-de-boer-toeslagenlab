@@ -6,7 +6,7 @@ import { UIManager } from './presentation/UIManager.js';
     
     const simulationManager = new SimulationManager();
 
-    async function runOnNewSlide(sheetUrl, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
+    async function runOnNewSlide(sheetUrl, sheetName, enablePreviousButton, startSaldo, currentMonthName, currentToeslagNaam, currentToeslagPercentage) {
         try {
             const parsedEnablePrevious = enablePreviousButton === '1';
             const parsedStartSaldo = Number(startSaldo) || 0;
@@ -19,7 +19,7 @@ import { UIManager } from './presentation/UIManager.js';
             if (!sheetUrl) return;
 
             if (!simulationManager.isInitialized()) {
-                await simulationManager.initialize(sheetUrl);
+                await simulationManager.initialize(sheetUrl, sheetName);
                 console.log('Simulation data initialized');
             }
 

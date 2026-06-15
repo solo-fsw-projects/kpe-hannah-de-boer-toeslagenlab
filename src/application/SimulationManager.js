@@ -1,6 +1,5 @@
 import { SaldoSimulation } from '../domain/SaldoSimulation.js';
-import { CSVService } from '../infrastructure/CSVService.js';
-import { UIManager } from '../presentation/UIManager.js';
+import { SheetService } from '../infrastructure/SheetService.js';
 
 export class SimulationManager {
     constructor() {
@@ -15,10 +14,10 @@ export class SimulationManager {
         this.slidesChangedStack = []; // Stack to track slide sequence
     }
 
-    async initialize(sheetUrl) {
+    async initialize(sheetUrl, sheetName) {
         if (this.months === null && sheetUrl) {
-            const csvData = await CSVService.fetchCSV(sheetUrl);
-            this.months = CSVService.convertCSVToObjects(csvData);
+            const data = await SheetService.fetchFromUrl(sheetUrl, sheetName);
+            this.months = SheetService.convertSheetToObjects(data);
         }
     }
 

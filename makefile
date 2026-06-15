@@ -4,6 +4,9 @@ export HOST_UID = $(shell id -u)
 console:
 	docker compose run --rm node /bin/bash
 
+run:
+	docker compose run --rm node $(CMD)
+
 init:
 	touch .bash_history
 	ln -sfn ../src test-env/src
@@ -31,4 +34,4 @@ build:
 down:
 	docker compose down
 
-.PHONY: console init test test-unit test-functional test-env test-debug down
+.PHONY: console run init test test-unit test-functional test-env test-debug down
