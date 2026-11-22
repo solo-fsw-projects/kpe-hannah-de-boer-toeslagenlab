@@ -1,6 +1,6 @@
 # Instructie Dienst Toeslagen Onderzoek
 
-13 januari 2025 - Deze instructie betreft het gebruik door onderzoekers
+Deze instructie betreft het gebruik door onderzoekers
 van de geprogrammeerde uitbreidingen op Qualtrics door Chris de Jager
 
 ## Overview instructie
