@@ -44,7 +44,7 @@ make run CMD="node --experimental-vm-modules node_modules/jest/bin/jest.js <pad>
 
 Zonder Docker: vervang `make test` door `npm test`, etc.
 
-CI draait automatisch bij elke push via GitHub Actions (`.github/workflows/test.yml`).
+CI draait automatisch bij elke push via GitHub Actions (`.github/workflows/workflow.yml`).
 
 ## Ontwikkelen
 
@@ -67,9 +67,14 @@ Produceert:
 
 ## Deploy
 
-Deploy gaat via GitHub Actions naar GitHub Pages:
+Deploy gaat automatisch via GitHub Actions naar GitHub Pages zodra je een versietag pusht:
 
-**GitHub → Actions → Deploy build to GitHub Pages → Run workflow** (selecteer de juiste branch)
+```bash
+git tag v6.6
+git push origin v6.6
+```
+
+De workflow draait eerst de testen. Slagen die, dan bouwt hij de versie en zet hij die op de `github-pages`-branch, in de map van de major-versie. Pushes zonder tag draaien alleen de testen.
 
 De bestanden zijn daarna beschikbaar via:
 ```
